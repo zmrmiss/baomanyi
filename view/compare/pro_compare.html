@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+ 	<link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>保满意-产品对比</title>
+</head>
+<body>
+    <div class="product-wrap">
+        <div class="product-banner banner-disease">
+            <div class="product-compare-title"></div>
+        </div>
+        <h2 class="product-title">保费测算PK</h2>
+        <div class="product-block">
+            <table class="product-table-comp table1-comp"></table>
+        </div>
+        <h2 class="product-title">产品属性PK</h2>
+        <div class="product-block">
+            <table class="product-table-comp table2-comp"></table>
+        </div>
+        <h2 class="product-title">保障范围PK</h2>
+        <div class="product-block">
+            <table class="product-table-comp table3-comp"></table>
+        </div>
+        <h2 class="product-title">其他</h2>
+        <div class="product-block">
+            <table class="product-table-comp table4-comp"></table>
+        </div>
+        <div id="aa"></div>
+    </div>
+    <div class="share-bar">
+        <img src="../../public/images/public/down_logo.png" class="share-logo">
+        <div class="share-word">
+            <h3>保满意APP</h3>
+            <p>买车险就用保满意</p>
+        </div>
+        <div class="share-control">
+            <a href="javascript:;" class="rightnow-open">立即打开</a>
+            <img src="../../public/images/public/close.png" class="share-close"> 
+        </div>
+    </div>
+    <div class="layer-share">请在浏览器中打开链接下载 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/app.js"></script>
+    <script>
+        var pro;
+        var url = window.location.href.match(/type=.([^&]*)/);
+
+        if(url&&url[0].substr(5)==1){
+            var sex = window.location.href.match(/sex=.([^&]*)/)[0].substr(4);
+            var age = window.location.href.match(/age=.([^&]*)/)[0].substr(4);
+            var fee = window.location.href.match(/fee=.([^&]*)/)[0].substr(4);
+            var range = window.location.href.match(/range=.([^&]*)/)[0].substr(6);
+            var product_id = window.location.href.match(/product_id=.([^&]*)/)[0].substr(11);
+            var quota = window.location.href.match(/quota=.([^&]*)/)[0].substr(6);
+
+            new ProCompare({
+                type: 'compare',
+                cp_sex: sex,
+                cp_age: age,
+                cp_fee: fee,
+                cp_range: range,
+                cp_product_id: product_id,
+                share:true,
+                quota:quota
+            })
+            $(".share-bar").css("display","block");
+            $(".rightnow-open").on("tap",function(){
+                if(isWeiXin()){
+                    $(".layer-share").css("display","block");
+                }else{
+                    new OpenApp({});     
+                }
+                $(".layer-share").on("tap",function(){
+                    $(this).css("display","none");
+                })
+            });
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            pro = new ProCompare({
+                type: 'compare',
+                cp_sex: json.sex,
+                cp_age: json.age,
+                cp_fee: json.fee,
+                cp_range: json.range,
+                cp_product_id: json.product_id,
+                quota:json.quota
+            })
+        }
+
+        function acceptShare(){
+            pro.sharepage("compare");
+        }
+    </script>
+</body>
+</html>

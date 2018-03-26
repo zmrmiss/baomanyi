@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+ 	<link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>经纪人详情</title>
+</head>
+<body>
+    <div class="manager-top">
+        <div class="manager-head">
+            <div class="manager-info clearfix">
+                <div class="manager-left">
+                    <img src="../../public/images/public/default_avator_img.png" class="manager-photo">
+                    <i class="manager-authentication"></i>
+                </div>
+                <div class="manager-right">
+                    <h1 class="manager-name"></h1>
+                    <em class="manager-level"></em>
+                    <div class="manager-detail"></div>
+                </div>
+            </div>
+            <p class="manager-description"></p>
+            <div class="manager-good"></div>
+        </div>
+    </div>
+    <div class="manager-bottom" id="mcompany">
+        <div class="manager-title">
+            <h2>所属公司</h2>
+        </div>
+        <div class="manager-company-block">
+            <img src="" class="manager-company-photo">
+            <div class="manager-company-info"></div>
+        </div>
+    </div>
+    <div class="manager-btn">投保咨询</div>
+    <div class="share-bar">
+        <img src="../../public/images/public/down_logo.png" class="share-logo">
+        <div class="share-word">
+            <h3>保满意APP</h3>
+            <p>买车险就用保满意</p>
+        </div>
+        <div class="share-control">
+            <a href="javascript:;" class="rightnow-open">立即打开</a>
+            <img src="../../public/images/public/close.png" class="share-close"> 
+        </div>
+    </div>
+    <div class="layer-share">请在浏览器中打开链接下载 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/app.js"></script>
+    <script>
+        var url = window.location.href.match(/type=.([^&]*)/);
+        var ag;
+
+        if(url&&url[0].substr(5)==1){
+            var id = window.location.href.match(/id=.([^&]*)/)[0].substr(3);
+            var user_id = window.location.href.match(/user_id=.([^&]*)/)[0].substr(8);
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+
+            var a = new Agent({
+                user_id: user_id,
+                agent_id: id,
+                type: 'car',
+                share: true,
+                code:code
+            });
+            a.init();
+            $(".share-bar").css("display","block");
+            $(".rightnow-open").on("tap",function(){
+                if(isWeiXin()){
+                    $(".layer-share").css("display","block");
+                }else{
+                    new OpenApp({});     
+                }
+                $(".layer-share").on("tap",function(){
+                    $(this).css("display","none");
+                })
+            });
+            $(".manager-good").css("display","none");
+            $(".manager-btn").css("display","none");
+            $("body").append(CNZZ);
+        }      
+        
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            ag = new Agent({
+                token: json.token,
+                user_id: json.userId,
+                agent_id: json.id,
+                type: 'car'
+            });
+            ag.init();
+            if(json.enterId=="0"){
+                $(".manager-btn").css("display","none");
+            }
+        }
+        
+        function acceptShare(){
+            ag.sharepage();
+        }
+
+        $(function(){
+            $(".manager-btn").on("tap",function(){
+                window.location.href = "bmy://app.dialog/agent/detail/insureAdvisory";
+            });
+        })
+    </script>
+</body>
+</html>

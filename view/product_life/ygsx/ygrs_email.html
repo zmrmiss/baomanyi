@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>申请邮箱审核</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current" id="page-jxn">
+            <header class="bar bar-nav head-bar"><a href="bmy://app.page/pageReturn" class="back"><i class="iconfont icon-arrow-left"></i></a>申请邮箱审核</header>
+            <div class="content">
+                <!-- <div class="loading">
+                    <div class="loading-img"></div>
+                    <div class="loadding-word">加载中...</div>
+                </div> -->
+                <div class="card-block product-result-wrap">
+                    <div class="flex-wrap">
+                        请填写您当前的工作单位信息(不能填写qq、163、sina等公共邮箱)。若审核通过，将在1-2个工作日内，短信及邮件告知您审核结果，审核通过后，您可以继续购买本产品。
+                    </div>
+                </div>
+                <div class="card-block product-wrap">
+                    <div class="flex-wrap bod-botm">
+                        <div class="item-title">工作单位电子邮箱</div>                    
+                        <div class="item-input"><input type="email" id="email" placeholder="请输入工作邮箱"></div> 
+                    </div>
+                    <div class="flex-wrap bod-botm">                    
+                        <div class="item-title">工作单位名称</div>                    
+                        <div class="item-input"><input type="text" id="company" placeholder="请输入工作单位"></div> 
+                    </div>
+                    <div class="flex-wrap bod-botm">                    
+                        <div class="item-title">工作城市</div>                    
+                        <div class="item-input"><input type="text" id="city" placeholder="请选择工作城市 >"></div> 
+                    </div>
+                    <div class="flex-wrap bod-botm">                    
+                        <div class="item-title">手机号</div>                    
+                        <div class="item-input"><input type="tel" id="mobile" placeholder="请输入手机号"></div> 
+                    </div>
+                </div>
+                <div class="flex-wrap">
+                    <div class="btn-grey get-back">返回</div>
+                    <div class="btn-orange email-sure">确定</div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="/public/dist/js/buy.js"></script>
+    <script>
+
+        var url = window.location.href.match(/type=.([^&]*)/);
+
+        if(url&&url[0].substr(5)==1){
+            var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+            $(".back").attr("href","#");
+            if(userInfo){
+                userInfo = userInfo.split(",");
+                $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                    if(re.code == '0001000'){
+                        var a = new JgEmail({
+                            token:userInfo[0],
+                            share: true
+                        });
+                        a.init();
+                    }else{
+                        window.location.href = "/view/user/login.html";
+                    }
+                },'json');
+            }else{
+                window.location.href = "/view/user/login.html";
+            }
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            var myPJ = new JgEmail({
+                token:json.token,
+                userId:json.userId
+            })
+            myPJ.init();
+        }
+
+    </script>
+</body>
+</html>

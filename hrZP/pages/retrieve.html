@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>找回密码</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+<div class="banner-bg">
+    <div class="hlogo w"><img src="../images/logo.png" alt=""></div>
+    <!--找回密码页-->
+    <div class="indfor retri" >
+        <div class="ret-rs">
+            <a href="javascript:void (0)" id="back_btn">返回登录</a>
+        </div>
+        <div class="reicon">
+            <div class="reicon-l active">
+                <div class="reicon-si">01</div>
+                <span>验证手机号</span>
+            </div>
+            <div class="reicon-r" style="float: right">
+                <div class="reicon-si">02</div>
+                <span>重置密码</span>
+            </div>
+        </div>
+        <form action="" class="form-horizontal" role="form" id="retri_btn" novalidate="novalidate" style="border: 0">
+            <div class="ret-inp">
+                <div class="int-inp">
+                    <input type="text"  placeholder="请输入手机号" id="wjphone">
+                    <span class="spa spa4"></span>
+                </div>
+                <div class="zhendx">
+                    <input type="text" placeholder="请输入短信验证码" id="code" style="width:180px">
+
+                    <div  class="hq-yzm" id="hq-yzm" style="width: 105px">
+                        <span>获取验证码</span>
+                    </div>
+                    <span class="spa spa5"></span>
+                </div>
+            </div>
+            <div class="insures-btn">
+                <div class="ture-btn" id="ture-btn">重置密码</div>
+            </div>
+        </form>
+
+        <form action="" class="form-horizontal" role="form" id="reset" novalidate="novalidate" style="display:none;"  >
+            <div class="reset">
+                <div class="int-inp">
+                    <input type="password" placeholder="请输入新密码" id="password1">
+                    <span class="spa spa6"></span>
+                </div>
+                <div class="int-inp">
+                    <input type="password" placeholder="请再次输入新密码" id="password2">
+                    <span class="spa spa7"></span>
+                </div>
+            </div>
+            <div class="retri-btn">
+                <div class="reter-btn"  id="Changeps">重置密码</div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--<script src="../js/jquery-validate.js"></script>-->
+<script src="../js/jquery-1.7.2.min.js"></script>
+<!--<script src="../js/login.js"></script>-->
+<script src="../js/config.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+
+<!--修改密码页-->
+<script>
+    var InterValObj; //timer变量，控制时间
+    var count = 60; //间隔函数，1秒执行
+    var curCount;//当前剩余秒数
+
+    $(function () {
+        Reset.init();
+    });
+
+    //获取token
+    function getToken(){
+        var r;
+        $.ajax({
+            type: "POST",
+            url: '//'+domain.hr+'/user/get_token',
+            data: {guid:'imei',user_id:0},
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            async: false,
+            success: function(re){
+                r = re.code == "0001200" ? re.data : 0;
+            }
+        });
+        return r;
+    }
+
+    window.matchTest={
+        regular:{
+            ps:/^[0-9A-Za-z]{6,16}$/,
+            ph:/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(14[0-9]{1}))+\d{8})$/,
+            yzm: /^[0-9a-zA-Z]{4}$/,
+            num:/^[0-9]*$/,
+            che:/^[\u4e00-\u9fa5]*$/
+        }
+    }
+
+    //修改密码页
+    Reset = {
+        init: function(){
+            var _this = this;
+            _this.test();
+            $("#password1").on('input propertychange', function() {
+                _this.isAllow();
+            });
+            $("#password2").on('input propertychange', function() {
+                _this.isAllow();
+            });
+            $("#wjphone").on('input propertychange', function() {
+                _this.isAllow();
+            });
+            $("#code").on('input propertychange', function() {
+                _this.isAllow();
+            });
+
+            $("#ture-btn").on("click",function () {
+                if(matchTest.regular.ph.test($("#wjphone").val())&&matchTest.regular.yzm.test($("#code").val())){
+                    _this.smstrue();
+                    return true;
+                }else{
+                    if($("#wjphone").val()==""){
+                        $(".spa4").text('请你填写手机号')
+                    }
+                    if($("#code").val()==""){
+                        $(".spa5").text('请你填写验证码')
+                    }
+                    return false;
+                }
+
+            })
+
+            $("#Changeps").on("click",function(){
+                if(matchTest.regular.ps.test($("#password1").val())){
+                    if ($("#password1").val()==$("#password2").val()){
+                        if($(this).hasClass("disabled")){return;}
+                        _this.reset();
+                    }else {
+                        $(".spa7").text('两次输入的密码不同，请重新输入');
+                    }
+                }else {
+                    $(".spa7").text('格式错误，请重新输入')
+                }
+
+
+            })
+
+            $(".hq-yzm").on("click",function(){
+                if ($("#wjphone").val()!=""){
+                    if($(this).attr("disabled")=="disabled"){return;}
+                    _this.sendmeng();
+                }else {
+                    $(".spa4").text("请输入手机号");
+                }
+
+            })
+
+            $("#back_btn").on("click",function () {
+                window.location.href='../index.html';
+            })
+        },
+        sendmeng: function(){
+            var _this = this;
+            if(!this.token){ this.token = getToken()}
+
+            $.ajax({
+                type:"post",
+                url:'//'+domain.hr+'/sms/send',
+                data:{token:_this.token,telphone:_this.mobile,smstype:'updatepass'},
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                async:false,
+                dataType: 'json',
+                success:function(re){
+                    console.log(re.code);
+                    if(re.code=="0002100"){
+                        alert("发送短信验证码失败")
+                    }
+                    if(re.code=="0002200"){
+                        alert("发送短信验证码成功。请注意查收");
+                        curCount = count;
+                        $("#hq-yzm").attr("disabled", "true");
+                        $("#hq-yzm").css("background", "#c9c9c9");
+                        $("#hq-yzm span").html( + curCount + "秒再获取");
+                        InterValObj = window.setInterval(_this.SetRemainTime, 1000); //启动计时器，1秒执行一次
+//向后台发送处理数据
+
+                    }
+                    if(re.code=="0002300"){
+                        alert(re.msg);
+                    }else{
+                        $(".spa5").text(re.msg)
+                    }
+                }
+            });
+
+        },
+        //timer处理函数
+        SetRemainTime: function() {
+            if (curCount == 0) {
+                window.clearInterval(InterValObj);//停止计时器
+                $("#hq-yzm").removeAttr("disabled");//启用按钮
+                $("#hq-yzm").css("background","#ff6900");//启用按钮
+                $("#hq-yzm span").html("重新发送验证码");
+                code = ""; //清除验证码。如果不清除，过时间后，输入收到的验证码依然有效
+            }
+            else {
+                curCount--;
+                $("#hq-yzm span").html( + curCount + "秒再获取");
+            }
+
+        },
+        isAllow: function(){
+            this.getdoms();
+        },
+        test:function () {
+            window.onload=function(){
+                $("#wjphone").focus()
+            }
+            /************************  失焦判断  **********************************/
+            $("input").blur(function(){
+                $("#wjphone").css("border","1px solid #fff");
+                $("#code").css("border","1px solid #fff");
+                $("#password1").css("border","1px solid #fff");
+                $("#password2").css("border","1px solid #fff");
+
+                //手机
+                if($(this).is("#wjphone")){            //手机号判断
+
+                    if($("#wjphone").val()!=""){
+                        if(!(matchTest.regular.ph.test($("#wjphone").val()))){
+                            $(".spa4").text("请输入正确手机号");
+                            $(this).css("border","1px solid #ff6900");
+                            return false;
+                        }else if(matchTest.regular.ph){
+                            $(".spa4").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa4").text("");
+                    }
+                }
+
+                //验证码
+                if($(this).is("#code")){            //验证码判断
+
+                    if($("#code").val()!=""){
+                        if(!(matchTest.regular.yzm.test($("#code").val()))){
+                            $(".spa5").text("验证码小于四位");
+                            $(this).css("border","1px solid #fff");
+                            return false;
+                        }else if(matchTest.regular.yzm){
+                            $(".spa5").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa5").text("");
+
+                    }
+                }
+
+                //密码1
+                if($(this).is("#password1")){            //密码判断
+
+                    if($("#password1").val()!=""){
+                        if(!(matchTest.regular.ps.test($("#password1").val()))){
+                            $(".spa6").text("请输入正确的密码");
+                            $(this).css("border","1px solid #fff");
+                            return false;
+                        }else if(matchTest.regular.ps){
+                            $(".spa6").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa6").text("");
+
+                    }
+                }
+
+                //    密码2
+                if($(this).is("#password2")){            //密码判断
+
+                    if($("#password2").val()!=""){
+                        if(!(matchTest.regular.ps.test($("#password2").val()))){
+                            $(".spa7").text("请输入正确的密码");
+                            $(this).css("border","1px solid #fff");
+                            return false;
+                        }else if(matchTest.regular.ps){
+                            $(".spa7").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa7").text("");
+
+                    }
+                }
+            })
+            /********************** 聚焦提示 ************************/
+            $("input").focus(function(){
+                if($(this).is("#wjphone")){
+//                    $(this).append()
+                    $(".spa4").text("11位手机号码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+                if($(this).is("#code")){
+                    $(".spa5").text("请输入四位验证码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+
+                if($(this).is("#password1")){
+                    $(".spa6").text("请输入密码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+
+                if($(this).is("#password2")){
+                    $(".spa7").text("请再次输入密码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+            })
+        },
+        getdoms: function(){
+            this.mobile = $("#wjphone").val();
+            this.code = $("#code").val();
+            this.password = $("#password1").val();
+            this.password2 = $("#password2").val();
+        },
+        smstrue:function () {
+            var _this=this;
+            $.ajax({
+                type:"post",
+                url:'//'+domain.hr+'/user/user/validateSms ',
+                data:{token:_this.token,smsCode:_this.code},
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                async:false,
+                dataType: 'json',
+                success:function(re){
+                    if(re.code=="1301100"){
+                        $(".spa5").text('短信验证失败');
+                    }
+                    if(re.code=="1301200"){
+                        $("#retri_btn").hide();
+                        $("#reset").show();
+                        $(".reicon-l").removeClass("active");
+                        $(".reicon-r").addClass("active");
+
+                    }
+                }
+            });
+        },
+        reset: function(){
+            var _this = this;
+            if(!this.token){ this.token = getToken()}
+            this.regJson = {
+                token: _this.token,
+                telphone: _this.mobile,
+                password: _this.password,
+                tel_code: _this.code
+            }
+            console.log(this.regJson);
+            $.post('//'+domain.jc+'/user/login/restpas',_this.regJson, function (re) {
+                console.log(re);
+                if(re.code=='0301200'){
+                    alert("密码修改成功");
+//                    setTimeout(function(){
+//                        window.history.go(-1)
+//                    },1500)
+                }else{
+                    alert(re.msg);
+
+                }
+            },'json');
+        }
+    }
+
+</script>
+</body>
+</html>

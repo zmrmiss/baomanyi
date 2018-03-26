@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>买保险</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current" id="page-fixed-tab-infinite-scroll">
+            <div class="bar-header-secondary fixed-tab">
+            </div>
+            <div class="content padding-content pull-to-refresh-content">
+                <div class="loading">
+                    <div class="loading-img"></div>
+                    <div class="loadding-word">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="/public/dist/js/web.js?v=1"></script>
+    <script>
+        var myBuy = new buyInsurance({});
+        myBuy.init();
+        myBuy.scrollevent()
+        
+    </script>
+    
+</body>
+</html>

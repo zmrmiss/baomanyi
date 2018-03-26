@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/head.css">
+    <title>确认投保信息</title>
+</head>
+<body>
+<div class="page-group">
+    <div class="page page-current" id="page-jxn">
+        <header class="bar bar-nav head-bar"><a href="bmy://app.page/pageReturn" class="back"><i class="iconfont icon-arrow-left"></i></a>确认投保信息</header>
+        <div class="content">
+            <div class="loading">
+                <div class="loading-img"></div>
+                <div class="loadding-word">加载中...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/buy.js?v=1"></script>
+<!--<script type="text/javascript" src="../../../public/debug/js/buy/ddhsx.js"></script>-->
+
+<script>
+
+
+    var url = window.location.href.match(/type=.([^&]*)/);
+    if(url&&url[0].substr(5)==1){
+
+        //从本地获取之前填写的数据 并填充上
+        this.inputInfo = localStorage.getItem("InfoAviation")?$.parseJSON(localStorage.getItem("InfoAviation")):0;
+        //从 订单跳转过来 会存在orderId
+        var orderId = window.location.href.match(/orderId=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(8):0;
+        var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+        $(".back").attr("href","#");
+        if(userInfo){
+            userInfo = userInfo.split(",");
+            $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                if(re.code == '0001000'){
+                    var myCJ = new ConfirmAviation({
+                        token:userInfo[0],
+                        share:true,
+                        name:this.inputInfo.name,
+                        idno:this.inputInfo.idno,
+                        phone:this.inputInfo.phone,
+                        validate:this.inputInfo.validate,
+                        insuretype:this.inputInfo.insuretype,//保险方案
+                        insurerange:this.inputInfo.insurerange,//保险期限
+                        productprice:this.inputInfo.productprice,//保费
+                        promotion_id:this.inputInfo.userId,
+                        order_id:orderId
+                    })
+                    myCJ.init();
+                }else{
+                    window.location.href = "../../user/login.html";
+                }
+            },'json');
+        }else{
+            window.location.href = "../../user/login.html";
+        }
+        $("body").append(CNZZ);
+    }
+
+
+
+    function accept(rs){
+        var json = $.parseJSON(rs);
+        var myCJ2 = new ConfirmAviation({
+            name:json.name,
+            idno:json.idno,
+            phone:json.phone,
+            validate:json.validate,
+            insuretype:json.insuretype,
+            insurerange:json.insurerange,
+            productprice:json.productprice,
+            token:json.token,
+            promotion_id:json.userid,
+            order_id:json.orderId?json.orderId:0  //从 订单跳转过来 会存在orderId
+        })
+        myCJ2.init();
+    }
+</script>
+</body>
+</html>

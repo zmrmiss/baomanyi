@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>返回结果</title>
+</head>
+<body>
+<!--<img src="" alt="" id="qrious" style="margin: 0 auto;display:block;margin-top: 20%;width: 50%">-->
+<div style="text-align: center;font-size: 48px;padding-top: 25%;">您的OpenId是：</div>
+<p id="openid" style="text-align: center;font-size: 48px;padding-top: 5%;"></p>
+</body>
+<script src="../../public/dist/js/script/Zepto.js"></script>
+<script src="../../public/dist/js/config.js"></script>
+<script src="../../public/dist/js/qrious.min.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    $(function () {
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+//            $.ajax({
+//                url: '//'+domain.jc+'/user/Getclient/getwxbyht',
+//                type: "POST",
+//                data: {code : code},
+//                async:true,
+//                cache: false,
+//                dataType: "json",
+//                success: function(re){
+//                    if (re.code == '0001000') {
+//                        var qr = window.qr = new QRious({
+//                            element: document.getElementById('qrious'),
+//                            value: ''
+//                        })
+//                        qr.value = re.data;
+//                        var stwidth=$("#qrious").width();
+//                        $("#qrious").css('height',stwidth);
+//                    }
+//                }
+//            });
+        getOpenid(code);
+//        获取openid
+        function getOpenid(code){
+            var id;
+            $.ajax({
+                type: "POST",
+                url: '//'+domain.jc+'/user/Getclient/getwechatInfo',
+                data: {code:code,type:1},
+                dataType: "json",
+                async: false,
+                success: function(re){
+                    id = re.code == "0001000"?re.data.wechat_openid:0;
+                    $('#openid').html(re.data.wechat_openid)
+                }
+            })
+            return id;
+        }
+//        $('#openid').html('000')
+    })
+
+</script>
+</html>

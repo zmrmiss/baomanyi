@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/head.css">
+    <title>填写投保信息</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current" id="page-zjc">
+            <header class="bar bar-nav head-bar"><a href="bmy://app.page/pageReturn" class="back"><i class="iconfont icon-arrow-left"></i></a>填写投保信息</header>
+            <div class="content">
+                <div class="loading">
+                    <div class="loading-img"></div>
+                    <div class="loadding-word">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../../public/dist/js/buy.js?v=1"></script>
+    <script>
+
+        //分享出去url示例 :http://172.13.26.80/view/product_life/ddhsx/ddh_insure.html?type=1&userId=300&proname=%E6%B5%99%E6%B1%9F&cityname=%E6%9D%AD%E5%B7%9E%E5%B8%82&nt=50%E4%B8%87
+        var url = window.location.href.match(/type=.([^&]*)/);
+        if(url&&url[0].substr(5)==1){
+            var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+            var userId = window.location.href.match(/userId=.([^&]*)/)[0].substr(7);
+            var addr = localStorage.getItem("zjc-city").split(" ");//投保地区
+            var coverageprice = localStorage.getItem("zjc-coverageprice");//保额
+            var proname = addr[0];
+            var cityname = addr[1];
+
+            $(".back").attr("href","#");
+            if(userInfo){
+                userInfo = userInfo.split(",");
+                $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                    if(re.code == '0001000'){
+                        var a = new ProZJC({
+                            token:userInfo[0],
+                            proName:"大都会超值自驾车意外险",
+                            share: true,
+                            userId:userId,
+                            proname:proname,
+                            cityname:cityname,
+                            nt:parseInt(coverageprice.split("万")[0])*10000
+                        });
+                        a.init();
+                    }else{
+                        window.location.href = "../../user/login.html";
+                    }
+                },'json');
+            }else{
+                window.location.href = "../../user/login.html";
+            }
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            var myPZ = new ProZJC({
+                token:json.token,
+                proName:"大都会超值自驾车意外险",
+                userId:json.userId,
+                proname:json.proname,
+                cityname:json.cityname,
+                nt:parseInt(json.nt.split("万")[0])*10000//保额
+            })
+            myPZ.init();
+        }
+
+    </script>
+
+</body>
+</html>

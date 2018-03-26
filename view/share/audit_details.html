@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>审核结果</title>
+    <style>
+        .audit-block{
+            line-height: 4.8rem;font-size: 1.6rem
+        }
+        #insured-col,#shoubox{
+            display: inline-block;text-align: center;color: #fff;font-size: 1.6rem;width: 40%;height: 3rem;line-height: 3rem;background-color: #ff6900;
+        }
+        #de_result,#de_resultbh{
+            display: none;
+        }
+        #audit_none{
+            margin: 50px auto;width: 5rem;text-align: center;height: 2rem;background-color: #000;color: #fff;font-size: 1.2rem
+        }
+    </style>
+</head>
+<body style="background-color: #fff;">
+<div class="page-group">
+    <div class="page page-current">
+        <div class="content">
+
+            <div class="audit-block">
+                <div class="flex-wrap is-spread ">
+                    <div style="margin-top: 1.8rem;">
+                        <img src="../../public/images/images/jobo_tupianbujianle@3x.png" id="img" alt="" style="height: 4.8rem">
+                    </div>
+                    <div>
+                        <div class="" style="text-align: left;line-height: 2.4rem" > <span id="audit_name"></span></div>
+                        <div class="" style="text-align: left;line-height: 2.4rem">id :  <span id="audit_id"></span></div>
+                    </div>
+
+                    <div id="audit_time" style="text-align: right;width: 50%">2017.1215</div>
+                </div>
+            </div>
+            <div class="audit-block">
+                <div class="flex-wrap is-spread " id="audit_detail"></div>
+            </div>
+
+            <div class="audit-block clearfix">
+                <div class="flex-wrap is-spread">
+                    <div></div>
+                    <div>
+                        <span id="audit_ip"></span>
+                        <span id="audit_addres"></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="audit-block" id="audit_btns" style="padding: 1.6rem 0;">
+                <div class="flex-wrap is-spread">
+                    <div id="insured-col"style="margin-right:10% ;font-size: 1.2rem">通过并关联通道组</div>
+                    <div id="shoubox" style="margin-left:10% ;font-size: 1.2rem">驳回</div>
+                </div>
+
+            </div>
+
+
+            <div class="audit-block" id="de_result" style="line-height: 2.4rem;padding:0 1.6rem ">
+                <div>审核人：<span></span></div>
+                <div>审核时间： <span></span></div>
+                <div>关联通道组： <span></span></div>
+                <div class="audit-block" style="line-height: 2.4rem;padding:0 1.6rem;margin: 0 auto ">
+                    <div id="audit_none">关闭</div>
+                </div>
+            </div>
+
+            <div class="audit-block" id="de_resultbh" style="line-height: 2.4rem;padding:0 1.6rem ">
+                <div>审核人：<span></span></div>
+                <div>审核时间： <span></span></div>
+                <div>驳回原因： <span></span></div>
+                <div class="audit-block" style="line-height: 2.4rem;padding:0 1.6rem;margin: 0 auto ">
+                    <div id="audit_none">关闭</div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+</body>
+
+
+
+
+<!--评论输入框-->
+<div class="answer-box">
+    <div class="answer-contxt">
+        <textarea class="question-main" id="question-con" placeholder="请输入驳回原因..." style="padding: 1rem" onkeyup='countChar("#question-con","#counter");'></textarea>
+        还可以输入<em id="counter">150</em>个字
+    </div>
+    <div class="question-lab">
+        <span id="btn-issue" class="btn btn-issue">提交</span>
+        <span id="btn-cancleissue" class="btn btn-cancle">取消</span>
+    </div>
+</div>
+<script src="../../public/dist/js/script/Zepto.js"></script>
+<script src="../../public/dist/js/config.js"></script>
+<script src="../../public/dist/js/buy.js"></script>
+<script src="../../public/dist/js/qrious.min.js"></script>
+<script src="../../public/debug/js/buy/recdetal.js"></script>
+<script type="text/javascript" src="../../public/dist/js/swiper.min.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    var id = window.location.href.match(/id=.([^&]*)/)?window.location.href.match(/id=.([^&]*)/)[0].substr(3):0;
+    var myAu = new Auditd({
+        id:id //模板id
+    })
+    myAu.init();
+
+</script>
+</html>

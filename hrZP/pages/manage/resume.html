@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简历管理</title>
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/manage.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+</head>
+<body>
+<!--固定导航-->
+<div class="left-common">
+    <ul>
+        <li>
+            <div class="logo3"><img src="../../images/mlogo.png" alt=""></div>
+        </li>
+        <li>
+            <div class="character" id="hr_name"></div>
+        </li>
+        <li>
+            <ul class="char-list">
+                <li id="hradmin">职位管理 <i class="icot"></i></li>
+                <li class="char-curr">简历管理<i class="icot"></i></li>
+                <li id="hrcenctrol">个人中心<i class="icot"></i></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!--标题开始-->
+<div class="co-banner">
+    <div class="co-name" id="togroup"></div>
+    <div class="co-img"><a href="javascript:void (0)" id="co-img"><img src="../../images/Esc.png" alt=""></a></div>
+</div>
+
+<!--简历管理页-->
+<div class="forms-wrap" id="forms-wrap">
+    <div class="infor" style="width: 68%;height: auto;margin-left: 19%;margin-right: 8%;min-width: 800px;">
+        <div class="resume">
+            <div class="sme-list" id="sme-list">
+                <ul>
+                    <li class="current">全部</li>
+                    <li>待沟通</li>
+                    <li>约面试</li>
+                    <li>已入职</li>
+                    <li>不合适</li>
+                </ul>
+            </div>
+            <div class="sme-choose">
+                <div class="nice-select" name="nice-select" id="zw-select">
+                    <input type="text" value="全部" readonly>
+                    <div id="pagetop"></div>
+                    <i class="iconfont icon-arrow-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="res-wrap">
+            <div class="res-left" id="res-left">
+
+            </div>
+            <div class="res-right" id="res-right" style="width: 65.3%;">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--弹出框-->
+
+<div class="alecont">
+    <div class="aleentry">
+        <div class="ale-title">确认将当前求职者标记为已入职吗？</div>
+        <div class="ale-btn">
+            <button class="btn-insure" id="rz-btn">确认</button>
+            <button class="btn-offer">取消</button>
+        </div>
+    </div>
+    <div class="appoint">
+        <div class="ale-title">确认将当前求职者标记为不合适吗？</div>
+        <div class="ale-btn">
+            <button class="btn-insure" id="bhs-btn">确认</button>
+            <button class="btn-offer">取消</button>
+        </div>
+    </div>
+    <div class="abint">
+        <form action="" method="post" id="oral" style="width: 100%;border: 0">
+            <div class="abint-tit">填写约面试信息(约面信息会以短信形式发送给求职者)</div>
+            <div class="abint-rul">
+                <div class="audrk">
+                    <div class="aud-title"><div>面试时间</div></div>
+                    <div class="aud-input">
+                        <div class="surplus">
+                            <input type='text' placeholder="请选择面试时间" name="interview_time" id="intime" onFocus="WdatePicker({lang:'zh-cn',dateFmt:'yyyy-MM-dd HH:mm:00',onpicked:pickedFunc,minDate:'%y-%M-%d'})" style="width: 250px;border: 0"/>
+                            <div class="sur-ido"><i class="iconfont icon-arrow-down"></i></div>
+                        </div>
+
+                    </div>
+                    <span class="spa spa32" style="left: 100px"></span>
+                </div>
+                <div class="audrk">
+                    <div class="aud-title"><div>面试地点</div></div>
+                    <div class="aud-input"><input type="text" name="address" id="msadd" placeholder="请输入面试地点"></div>
+                    <span class="spa spa33" style="left: 100px"></span>
+                </div>
+                <div class="audrk">
+                    <div class="aud-title"><div>联系人</div></div>
+                    <div class="aud-input"><input type="text" name="contacts" id="mspeople" placeholder="请输入联系人"></div>
+                    <span class="spa spa34" style="left: 100px"></span>
+                </div>
+                <div class="audrk">
+                    <div class="aud-title"><div>联系方式</div></div>
+                    <div class="aud-input"><input type="text" name="telephone" id="mstel" placeholder="请输入联系方式"></div>
+                    <span class="spa spa35" style="left: 100px"></span>
+                </div>
+                <div class="audrk" style="height: auto;margin-bottom: 0">
+                    <div class="aud-title"><div>备注</div></div>
+                    <div class="aud-input" style="float: none"><textarea name="comment" id="mscase " cols="30" rows="10" placeholder="选填"></textarea></div>
+                </div>
+                <div class="audrk abint-su">
+                    <div class="aud-title" style="height: 36px"><div></div></div>
+                    <div class="abint-btn">
+                        <div class="abint-true" id="abint-true">约面试</div>
+                        <div class="abint-off">取消</div>
+                    </div>
+
+                </div>
+                <a href="javascript:void (0)" id="to_charge" style="display: none">您的余额不足，请充值 >></a>
+            </div>
+        </form>
+
+    </div>
+    <div class="aleclose">
+        <h4 class="clo-font">微信扫码支付</h4>
+        <div class="clo-qrd"><img src="../../images/qrcode3.png" alt=""></div>
+        <div class="pay-box">
+            <a href="" style="">支付成功</a>
+            <a href="" style="background-color: #c9c9c9;float: right">取消支付</a>
+        </div>
+        <div class="close-btn"><img src="../../images/close.png" alt="点击关闭"></div>
+    </div>
+</div>
+<!--<script src="../js/base.js"></script>-->
+<script src="../../js/WdatePicker.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/handlebars-v4.0.5.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/jquery-1.7.2.min.js"></script>
+<script src="../../js/jquery.form.js"></script>
+<!--<script src="../../js/calendar.js"></script>-->
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script src="../../js/login.js"></script>
+
+<!--右上角信息-->
+<script id="topagelist" type="text/x-handlebars-template">
+    <ul>
+        <li data-value="0">全部</li>
+        {{#each data}}
+        <li data-value="{{this.id}}">{{this.title}}</li>
+        {{/each}}
+    </ul>
+</script>
+
+<!--公司-->
+<script id="group" type="text/x-handlebars-template">
+    <span>{{fullname}}</span>
+</script>
+
+<!--hr-->
+<script id="hr" type="text/x-handlebars-template">
+    <div class="chap-lp">
+        <div class="char-pho"><img src="{{avator}}" alt=""></div>
+    </div>
+    <div class="char-sty"><span class="char-name">{{fullname}}</span></div>
+</script>
+
+<!--投递者列表-->
+<script id="delivery" type="text/x-handlebars-template">
+    <ul>
+        {{#each list}}
+        <li data-id="{{id}}">
+            <div class="rm-for">
+                <div class="re-hp">
+                    <div class="hp-img"><img src="{{picture}}" alt=""></div></div>
+                <div class="re-name">
+                    <div class="de-name name-for"><span>{{fullname}}</span></div>
+                    <div class="de-jobs" style="color: #808080"><span>{{title}}</span></div>
+                </div>
+                <div class="re-time"><span class="ti-more">{{created_at}}</span></div>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</script>
+
+<!--简历详情-->
+<script id="jlexpmaple" type="text/x-handlebars-template">
+    <ul>
+        <li class="res-detail" style="display:block">
+            <div class="re-details">
+                <div class="detal-mor">
+                    <div class="deta-btn">
+                        <div class="deta-icon1" id="yueta" style="">约面试 <i></i></div>
+                        <div class="deta-icon2" id="entry">已入职 <i></i></div>
+                        <div class="deta-icon3" id="pass">不合适 <i></i></div>
+                    </div>
+                </div>
+                <div class="detal-kl">
+                    <div class="detal-o">
+                        <div class="detal-name">
+                            <div class="de-name"><span>{{person.fullname}}</span></div>
+                            <div class="de-jobs"><span>{{person.position.title}}</span></div>
+                        </div>
+                        <div class="dt-list">
+                            <div class="dt-left">
+                                <span class="dt-sex">{{sex sex}}<i></i></span>
+                                <span class="dt-year">{{person.birth}}<i></i></span>
+                                <span class="dt-phone">{{person.telephone}}<i></i></span>
+                            </div>
+                        </div>
+                        <div class="dt-absul"><img src="{{person.picture}}" alt=""></div>
+                    </div>
+                    <div class="detal-t">
+                        <div class="information">
+                            <h1>职业信息</h1>
+                        </div>
+                        <div class="ttmation">
+                            <span class="mt-education">{{educationo vocation.education}}<i></i></span>
+                            <span class="mt-exp">{{experience vocation.experience}}<i></i></span>
+                            <span class="mt-add">{{{vocation.city}}}<i></i></span>
+                            <span class="mt-time">{{jsposition vocation.status}}<i></i></span>
+                            <span class="mt-name">{{vocation.company}}<i></i></span>
+                            <span class="mt-occupation">{{vocation.position}}<i></i></span>
+                        </div>
+                    </div>
+                    <div class="detal-h">
+                        <div class="information">
+                            <h1>教育经历</h1>
+                        </div>
+                        <div class="rience" id="torience">
+                            <ul>
+                                {{#each educations}}
+                                <li>
+                                    <div class="rie-sch">{{school}}</div>
+                                    <div class="rie-major">{{education education}}-{{profession}}</div>
+                                    <em></em>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="detal-h">
+                        <div class="information">
+                            <h1>工作经历</h1>
+                        </div>
+                        <div class="jobcent" id="tojobcent">
+                            <ul>
+                                {{#each experiences}}
+                                <li>
+                                    <div class="rie-company">{{company}}</div>
+                                    <div class="rie-desig">{{vocation}}</div>
+                                    <div class="rie-xq">
+                                        <p>{{narration}}</p>
+                                    </div>
+                                    <em></em>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="interview">
+                    <div class="inter-phone">
+                        面试时间:<span>{{interview.interview_time}}</span>
+                        联系人:<span>{{interview.contacts}}</span>
+                        联系方式:<span>{{interview.telephone}}</span>
+                    </div>
+                    <div>面试地址:<span>{{interview.address}}</span></div>
+                    <div>备注:<span>{{interview.comment}}</span></div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</script>
+
+
+<script>
+    function pickedFunc(unu){
+        var unu=$("#intime").val();
+    };
+    $(function () {
+        HrResume()
+    })
+
+    $("#co-img").on("click",function ()  {
+        $.ajax({
+            type: 'post',
+            url:'//'+domain.hr+'/user/login/loginout',
+            data: {token:recruit.token},
+            dataType: 'json',
+            cache: false,
+            success:function (data){
+                console.log(data);
+                if(data.code=='0301200'){
+                    window.location.href='/index.html'
+                }
+                if(data.code=='0301100'){
+                    alert(data.msg)
+                }
+                if(data.code=='0001101'){
+                    alert(data.msg)
+                }
+            }
+        });
+    })
+
+</script>
+
+</body>
+</html>

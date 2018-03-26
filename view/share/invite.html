@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+ 	<link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>邀请好友体验</title>
+</head>
+<body class="bodyColor-Red">
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content">
+                <div class="invite-item-1">
+                    <img src="/public/images/share/share_head.png">
+                </div>
+                <div class="invite-item-2">
+                    <img src="/public/images/share/advantage_1.png">
+                </div>
+                <div class="invite-item-3">
+                    <img src="/public/images/share/award_title.png">
+                    <ul class="invite-award">
+                        <li><img src="/public/images/share/award_coin_1.png"><p>您直接邀请的好友如果注册体验，您将获得<span>500积分/人</span>的奖励</p></li>
+                        <li><img src="/public/images/share/award_coin_2.png"><p>您发展的会员在保满意下单，您都将获得相应比例的佣金奖励。<a href="/view/share/explain.html" class="link-yellow" external>查看奖励详情</a></p></li>
+                    </ul>
+                </div>
+                <div class="invite-item-line"></div>
+                <div class="invite-item-4">
+                    <img src="/public/images/share/share_to.png">
+                    <ul class="share-btn">
+                        <li id="btn1"><img src="/public/images/public/share_weixin.png"><span>微信好友</span></li>
+                        <li id="btn2"><img src="/public/images/public/share_pyq.png"><span>朋友圈</span></li>
+                        <li id="btn3"><img src="/public/images/public/share_scan.png"><span>面对面扫码</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layer-share">点击右上角进行分享 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+    <script type="text/javascript" src="/public/dist/js/web.js"></script>
+    <script>
+        $.ajax({  
+            url: "http://wx.baomanyi.com.cn/signature/Signature/ticket",  
+            type: "POST",
+            data: {'url' : window.location.href},
+            async:true,  
+            cache: false,  
+            dataType: "json",  
+            success: function(data){  
+                if (data.code == '0001000') {
+                    wx.config({
+                        debug: false,
+                        appId: data.data.appId,
+                        timestamp: data.data.timestamp,
+                        nonceStr: data.data.nonceStr,
+                        signature: data.data.signature,
+                        jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage']
+                    });
+                }
+            }
+        });
+
+        wx.ready(function () {
+            var eUid = window.location.href.match(/referrer_id=.([^&]*)/)?window.location.href.match(/referrer_id=.([^&]*)/)[0].substr(12):localStorage.getItem("eUid");
+            var vtoken,name;
+            if(!vtoken){ vtoken = getToken()}
+            $.post('//'+domain.jc+'/user/setting/geth5view',{token:vtoken,referrer_id:eUid}, function (re) {
+                if(re.code=='0001000'){
+                    name = re.data.real_name;
+                    wx.onMenuShareTimeline({
+                        title: name+'发你一封保满意产品体验函',            
+                        link: window.location.origin+"/view/share/reg.html?referrer_id="+eUid,
+                        imgUrl: window.location.origin+'/public/images/public/share.png?v=1',
+                        success: function () {
+                        },
+                        cancel: function () {
+                        }
+                    });
+
+                    wx.onMenuShareAppMessage({
+                        title: '我为保满意代言，邀你一起体验车险比价神器、低价购险利器！',
+                        desc: '简单极速，产品丰富，价格便宜，买车险，就用保满意！',
+                        link: window.location.origin+"/view/share/reg.html?referrer_id="+eUid,
+                        imgUrl: window.location.origin+'/public/images/public/share.png?v=1',
+                        success: function () {
+                        },
+                        cancel: function () {
+                        }
+                    });
+                }
+            },'json'); 
+        });
+
+        $("body").append(CNZZ);
+
+        $(function(){
+            if(isWeiXin()){
+                $(".invite-item-3").remove();
+            }
+
+            var _this = this,flag = 1,flag2 = 1;
+
+            $("#btn1").off("tap").on("tap",function(){
+                var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+                if(userInfo){
+                    userInfo = userInfo.split(",");
+                    if(flag){
+                        flag = 0;
+                        $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                            flag = 1;
+                            if(re.code == '0001000'){
+                                if(isWeiXin()){$(".layer-share").css("display","block");}
+                            }else{
+                                window.location.href = "/view/user/login.html";
+                            }
+                        },'json');
+                    }
+                }else{
+                    window.location.href = "/view/user/login.html";
+                }
+            });
+
+            $("#btn2").off("tap").on("tap",function(){
+                var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+                if(userInfo){
+                    userInfo = userInfo.split(",");
+                    if(flag2){
+                        flag2 = 0;
+                        $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                            flag2 = 1;
+                            if(re.code == '0001000'){
+                                if(isWeiXin()){$(".layer-share").css("display","block");}
+                            }else{
+                                window.location.href = "/view/user/login.html";
+                            }
+                        },'json');
+                    }
+                }else{
+                    window.location.href = "/view/user/login.html";
+                }
+            });
+
+            $("#btn3").off("tap").on("tap",function(){
+                var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+                if(userInfo){
+                    userInfo = userInfo.split(",");
+                    if(flag2){
+                        flag2 = 0;
+                        $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                            flag2 = 1;
+                            if(re.code == '0001000'){
+                                var mask = $('<div class="mask-layer"></div>');
+                                mask.css("display","block");
+                                $("body").append('<div class="pop-qrcode"><p>好友扫一扫，注册加入保满意</p><div id="qrcode"></div><div class="pop-close-icon"><i class="iconfont icon-close"></i></div></div>',mask);
+                                new QRCode(document.getElementById("qrcode"), window.location.origin+"/view/share/reg.html?referrer_id="+(localStorage.getItem("eUid")?localStorage.getItem("eUid"):0));
+                                $(".pop-close-icon").on("tap",function(){
+                                    $(".mask-layer").remove();
+                                    $(".pop-qrcode").remove();
+                                })
+                            }else{
+                                window.location.href = "/view/user/login.html";
+                            }
+                        },'json');
+                    }
+                }else{
+                    window.location.href = "/view/user/login.html";
+                }
+            });
+
+            $(".layer-share").on("tap",function(){
+                $(this).css("display","none")
+            });
+        })
+    </script>
+</body>
+</html>

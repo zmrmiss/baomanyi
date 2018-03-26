@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/head.css">
+    <link rel="stylesheet" href="../../../public/debug/css/swiper.min.css">
+    <title>福利详情</title>
+    <style>
+        b{
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body style="">
+<div class="page-group">
+    <div class="page page-current">
+        <div class="content">
+            <div class="loading">
+                <div class="loading-img"></div>
+                <div class="loadding-word">加载中...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/handlebars-v4.0.5.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/buy.js"></script>
+</body>
+<script>
+    function accept(rs){
+        var json = $.parseJSON(rs);
+        var myHe = new HyMine({
+            token:json.token,
+            fuliId:json.fuliId
+        })
+        myHe.init();
+    }
+</script>
+<script id="mine" type="text/x-handlebars-template">
+    <div class="mber-wrap">
+        <div style="font-size: 1.6rem;font-weight: bold;line-height: 2.2rem;margin-top: 2.4rem;color: #575757;">{{html.header}}</div>
+    </div>
+    <!--<div class="mber-pic">-->
+        <!--<div class="pic-one"><img src="{{html.img}}" alt="" style="width: 100%;height:100%;"></div>-->
+    <!--</div>-->
+    <div class="mber-wrap" style="padding-top: 1.5rem;">
+        <!--<div class="mber-title">佣金详情描述</div>-->
+        <span class="mber-exp">{{{html.money_detail}}}</span>
+    </div>
+    <div class="mber-wrap">
+        <!--<div class="mber-title">活动详情描述</div>-->
+        <span class="mber-exp">{{{html.detail}}}</span>
+    </div>
+    <div class="mine-wrap">
+        <div class="mine-jl">
+            <div class="mine-banner">
+                <div class="mine-lt">
+                    <i class="iconfont icon-menu"></i>
+                    <span style="">推荐记录</span></div>
+                <div class="color-808080 mine-rt">
+                    已推荐&nbsp;&nbsp;&nbsp;<span class="color-FF6900" id="">{{count}}</span>&nbsp;&nbsp;&nbsp;人
+                </div>
+            </div>
+            <div class="mine-exp">
+                <ul>
+                    {{#each list}}
+                    <li class="mine-dital">
+                        <div style="width:100%;height:5.3rem;border-bottom: 1px solid #e4e4e4;">
+                            <div style="float: left;">
+                                <div class="mine-name">{{this.name}}</div>
+                                <div class="mine-title">
+                                    <span class="mine-tel">{{this.telephone}}</span>
+                                    <div class="mine-icon" >
+                                        <i class="iconfont icon-phone" style=""></i>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="mine-time">{{this.create_time}}</div>
+                        </div>
+
+                    </li>
+                   {{/each}}
+                </ul>
+                <div style="text-align: center;font-size: 1.4rem;color: #a5a5a5;">没有更多了</div>
+            </div>
+        </div>
+        <div class="" style=""></div>
+    </div>
+</script>
+</html>

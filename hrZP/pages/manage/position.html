@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>职位管理</title>
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/manage.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <style>
+        #zw-sel ul li.on{
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<!--固定导航-->
+<div class="left-common">
+    <ul>
+        <li>
+            <div class="logo3"><img src="../../images/mlogo.png" alt=""></div>
+        </li>
+        <li>
+            <div class="character" id="hr_name">
+
+            </div>
+        </li>
+        <li>
+            <ul class="char-list">
+                <li class="char-curr">职位管理 <i class="icot"></i></li>
+                <li id="hrmanagement">简历管理<i class="icot"></i></li>
+                <li id="hrcenctrol">个人中心<i class="icot"></i></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!--标题开始-->
+<div class="co-banner">
+    <div class="co-name" id="togroup"></div>
+    <div class="co-img"><a href="javascript:void (0)" id="co-img"><img src="../../images/Esc.png" alt=""></a></div>
+</div>
+
+<!--职位管理页-->
+<div class="forms-wrap" id="forms-wrap">
+    <div class="infor">
+        <div class="position">
+            <div class="pos-left">职位管理</div>
+            <div class="pos-right">
+                <div class="r-btn">
+                    <div>
+                        <div class="nice-select" name="nice-select" id="zw-sel">
+                            <input type="text" value="打开的职位" readonly>
+                            <ul>
+                                <li data-value="0">打开的职位</li>
+                                <li data-value="1">关闭的职位</li>
+                            </ul>
+                            <i class="iconfont icon-arrow-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="rele" id="rele"><a href="javascript:void (0)">发布职位</a></div>
+            </div>
+        </div>
+        <div class="zw-wrap">
+            <div id="db_content"></div>
+            <div id="page" class="fenye"></div>
+        </div>
+    </div>
+</div>
+
+<!--弹出框-->
+<div class="alecont">
+    <div class="aleentry">
+        <div class="ale-title">确认将当前求职者标记为已入职吗？</div>
+        <div class="ale-btn">
+            <a href="" class="btn-insure">确认</a>
+            <a href="" class="btn-offer">取消</a>
+        </div>
+    </div>
+    <div class="appoint">
+        <div class="ale-title">确认将当前求职者标记为不合适吗？</div>
+        <div class="ale-btn">
+            <a href="" class="btn-insure">确认</a>
+            <a href="" class="btn-offer">取消</a>
+        </div>
+    </div>
+    <div class="abint">
+        <div class="abint-tit">填写约面试信息(约面信息会以短信形式发送给求职者)</div>
+        <div class="abint-rul">
+            <div class="audrk">
+                <div class="aud-title"><div>面试时间</div></div>
+                <div class="aud-input">
+                    <div class="surplus">
+                        <input type="text" placeholder="请选择面试时间" style="width: 250px">
+                        <div class="sur-ido"><i class="iconfont icon-arrow-down"></i></div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="audrk">
+                <div class="aud-title"><div>面试地点</div></div>
+                <div class="aud-input"><input type="text" placeholder="请输入面试地点"></div>
+            </div>
+            <div class="audrk">
+                <div class="aud-title"><div>联系人</div></div>
+                <div class="aud-input"><input type="text" placeholder="请输入联系人"></div>
+            </div>
+            <div class="audrk">
+                <div class="aud-title"><div>联系方式</div></div>
+                <div class="aud-input"><input type="text" placeholder="请输入联系方式"></div>
+            </div>
+            <div class="audrk" style="height: auto;margin-bottom: 0">
+                <div class="aud-title"><div>备注</div></div>
+                <div class="aud-input" style="float: none"><textarea name="" id="0" cols="30" rows="10" placeholder="选填"></textarea></div>
+            </div>
+            <div class="audrk abint-su">
+                <div class="aud-title" style="height: 36px"><div></div></div>
+                <div class="abint-btn">
+                    <a href="" class="abint-true">保存</a>
+                    <a href="" class="abint-off">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="aleclose">
+        <h4 class="clo-font">微信扫码支付</h4>
+        <div class="clo-qrd"><img src="../../images/qrcode3.png" alt=""></div>
+        <div class="pay-box">
+            <a href="" style="">支付成功</a>
+            <a href="" style="background-color: #c9c9c9;float: right">取消支付</a>
+        </div>
+        <div class="close-btn"><img src="../../images/close.png" alt="点击关闭"></div>
+    </div>
+</div>
+
+<script src="http://www.baomanyi.com.cn/public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/handlebars-v4.0.5.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/jquery-1.7.2.min.js"></script>
+<script src="../../js/jquery.form.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script src="../../js/login.js"></script>
+<!--详情-->
+<script id="db-template" type="text/x-handlebars-template">
+    <div id="data_main">
+        {{#each list}}
+        <ul>
+            <li class="su-for">
+                <div class="forms">
+                    <div class="ms-top">
+                        <div class="ms-zw">
+                            <div class="zw-hpo">
+                                <span class="ifr-indus">{{title}}</span>
+                                <div class="ifi-off">
+                                    <span>已关闭</span>
+                                </div>
+                            </div>
+                            <div class="zw-exp">
+                                <div class="zw-left">
+                                    <span class="ms-add" style="padding-left: 0">{{city}}</span>
+                                    <span class="ms-exps">{{experience}}</span>
+                                    <span class="ms-edu">{{education}}</span>
+                                    <span class="ms-wages" style="border: 0">{{salary}}</span>
+                                </div>
+                                <div class="zw-right">
+                                    <div class="zw-num"><span>{{browse}}</span>人查看</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ms-bot">
+                        <div class="ms-year"><span class="ms-ase">{{dateFormat created_at}}</span>发布</div>
+                        <div class="ms-change">
+                            <div class="zw-ch" id="zw-ch"><i></i>编辑职位</div>
+                            <div class="zw-off" id="zw-off"><i id="zw-color"></i>关闭职位</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        {{/each}}
+    </div>
+</script>
+
+<!--页码-->
+<script id="db-page" type="text/x-handlebars-template">
+    <ul>
+        {{#firstpage}}
+        <li><a href="javascript:void(0);" data="1">首页</a></li>
+        {{/firstpage}}
+        {{^firstpage}}
+        <li style="width:0;border:0;padding:0"></li>
+        {{/firstpage}}
+
+        {{#previous}}
+        <li><a href="javascript:void(0);" data="{{page}}">上一页</a></li>
+        {{/previous}}
+        {{^previous}}
+        <li style="width:0;border:0;padding:0"></li>
+        {{/previous}}
+
+        {{#pagelist}}
+        {{#link}}
+        <li><a href="javascript:void(0);" data="{{page}}">{{page}}</a></li>
+        {{/link}}
+        {{^link}}
+        <li class="thisclass"><a class="p_hov">{{page}}</a></li>
+        {{/link}}
+        {{/pagelist}}
+
+        {{#next}}
+        <li><a href="javascript:void(0);" data="{{page}}">下一页</a></li>
+        {{/next}}
+        {{^next}}
+        <li style="width:0;border:0;padding:0;"></li>
+        {{/next}}
+
+        {{#lastpage}}
+        <li><a href="javascript:void(0);" data="{{total}}">末页</a></li>
+        {{/lastpage}}
+        {{^lastpage}}
+        <li style="width:0;border:0;padding:0"></li>
+        {{/lastpage}}
+    </ul>
+</script>
+
+<!--公司-->
+<script id="group" type="text/x-handlebars-template">
+    <span>{{fullname}}</span>
+</script>
+
+<!--hr-->
+<script id="hr" type="text/x-handlebars-template">
+    <div class="chap-lp">
+        <div class="char-pho"><img src="{{avator}}" alt=""></div>
+    </div>
+    <div class="char-sty"><span class="char-name">{{fullname}}</span></div>
+</script>
+
+<script>
+    $(function () {
+        HrPosition();
+    })
+
+    $("#co-img").on("click",function () {
+        $.ajax({
+            type: 'post',
+            url:'//'+domain.hr+'/user/login/loginout',
+            data: {token:recruit.token},
+            dataType: 'json',
+            cache: false,
+            success:function (data){
+                console.log(data)
+                if(data.code=='0301200'){
+                    window.location.href='/index.html'
+                }
+                if(data.code=='0301100'){
+                    alert(data.msg)
+                }
+                if(data.code=='0001101'){
+                    alert(data.msg)
+                }
+            }
+        });
+    })
+
+</script>
+</body>
+</html>

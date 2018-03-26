@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+ 	<link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>买车险，就用保满意</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content">
+                <div class="reg-item-1">
+                    <img src="/public/images/share/reg_head.png">
+                </div>
+                <div class="reg-item-2">
+                    <img src="/public/images/public/default_avator_img.png" class="freind-avator-img">
+                    <p class="friend-name">我是<span></span></p>
+                    <img src="/public/images/share/endorse.png" style="width: 18rem;">
+                    <p class="friend-info">邀你一起体验保满意</p>
+                    <img src="/public/images/share/advantage_2.png?v=1">
+                    <a href="javascript:;" class="go-reg"><img src="/public/images/share/btn_reg.png"></a>
+                    <img src="/public/images/share/share_qcode.png" style="width: 7rem;margin-bottom: .5rem;">
+                    <p class="color-fff">关注保满意公众号</p>
+                </div>
+                <div class="share-form" style="display: none;">
+                    <div class="share-form-col">
+                        <input type="tel" placeholder="请输入您的手机号" name="phone-num" id="phone-num">
+                        <a href="javascript:;" class="get-code">获取验证码</a>
+                    </div>
+                    <div class="share-form-col">
+                        <input type="number" placeholder="请输入验证码" name="yzm" id="yzm">
+                    </div>
+                    <div class="share-form-col">
+                        <input type="password" placeholder="请设置一个密码" name="password" id="password">
+                    </div>
+                    <div class="share-download" id="register">立即注册并下载APP</div>
+                    <a href="javascript:;" class="close-reg"><i class="iconfont icon-close1"></i></a>
+                </div>
+                <div class="mask-layer"></div>
+                <div class="reg-aler">
+                    <div class="reg-stext">
+                        <div class="reg-bot">该手机号已经注册保满意会员，请下载App后登录使用</div>
+                        <div>
+                            <a href="" class="ret-tap-colse" style="border-right:0.1rem solid #e4e4e4; ">关闭</a>
+                            <a href="" class="ret-tap-down" style="color: #ff6900">下载App</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span id="adurl" style="display:none;"></span>
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="/public/dist/js/web.js"></script>
+    <script>
+        $(function (){
+            var $form = $(".share-form"),$mask = $(".mask-layer");
+            $(".go-reg").on("tap",function(){
+                $form.css("display","block");
+                $mask.css("display","block");
+            });
+
+            $(".close-reg").on("tap",function(){
+                $form.css("display","none");
+                $mask.css("display","none");
+            });
+
+            var eUid,vtoken;
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+            
+            var scode = localStorage.getItem("hkcode");
+            code = scode==code?0:code;
+
+            var openid = code==0?localStorage.getItem("hkopenid"):getOpenid(code);
+
+            eUid = window.location.href.match(/referrer_id=.([^&]*)/)?window.location.href.match(/referrer_id=.([^&]*)/)[0].substr(12):0;
+            if(!vtoken){ vtoken = getToken()}
+            $.post('//'+domain.jc+'/user/setting/geth5view',{token:vtoken,referrer_id:eUid}, function (re) {
+                if(re.code=='0001000'){
+                    $(".freind-avator-img").attr("src",re.data.avator);
+                    $(".friend-name span").html(re.data.real_name);
+                    $("#adurl").html(re.data.apk_url);
+
+                    toreg();
+                }
+            },'json');
+            
+            function toreg(){
+                var url=$("#adurl").html();
+                new Register({
+                    token:vtoken,
+                    referrer_id: eUid,
+                    openid:openid,
+                    adurl : url
+                })
+                if(!scode){
+                   localStorage.setItem("hkcode",code);
+                   localStorage.setItem("hkopenid",openid);
+                }
+            }    
+        })
+
+        $.ajax({  
+            url: "http://wx.baomanyi.com.cn/signature/Signature/ticket",  
+            type: "POST",
+            data: {'url' : window.location.href},
+            async:true,  
+            cache: false,  
+            dataType: "json",  
+            success: function(data){  
+                if (data.code == '0001000') {
+                    wx.config({
+                        debug: false,
+                        appId: data.data.appId,
+                        timestamp: data.data.timestamp,
+                        nonceStr: data.data.nonceStr,
+                        signature: data.data.signature,
+                        jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage']
+                    });
+                }
+            }
+        });
+
+        wx.ready(function () {
+            var eUid = window.location.href.match(/referrer_id=.([^&]*)/)?window.location.href.match(/referrer_id=.([^&]*)/)[0].substr(12):0;
+            var vtoken,name;
+            if(!vtoken){ vtoken = getToken()}
+            $.post('//'+domain.jc+'/user/setting/geth5view',{token:vtoken,referrer_id:eUid}, function (re) {
+                if(re.code=='0001000'){
+                    name = re.data.real_name;
+                }else{
+                    name = "保满意"
+                }
+                wx.onMenuShareTimeline({
+                    title: name+'发你一封保满意产品体验函',            
+                    link: window.location.href,
+                    imgUrl: window.location.origin+'/public/images/public/share.png?v=1',
+                    success: function () {
+                    },
+                    cancel: function () {
+                    }
+                });
+
+                wx.onMenuShareAppMessage({
+                    title: '我为保满意代言，邀你一起体验车险比价神器、低价购险利器！',
+                    desc: '简单极速，产品丰富，价格便宜，买车险，就用保满意！',
+                    link: window.location.href,
+                    imgUrl: window.location.origin+'/public/images/public/share.png?v=1',
+                    success: function () {
+                    },
+                    cancel: function () {
+                    }
+                });
+            },'json');
+        });
+
+        $("body").append(CNZZ);
+    </script>
+</body>
+</html>

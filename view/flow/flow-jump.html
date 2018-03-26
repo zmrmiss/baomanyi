@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>支付宝支付</title>
+</head>
+<body>
+<script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+<script>
+    function accept(rs){
+        var json = $.parseJSON(rs);
+        var myFP = new FjumPs({
+            type : json.type,
+            token:json.token,
+            carrier:json.carrier,
+            pay_type:1,
+            telephone :json.tel,
+            province :json.province ,
+            data_type :json.datatype ,
+            data :json.data,
+            id : json.id
+        })
+        myFP.init();
+    }
+</script>
+</body>
+
+
+</html>

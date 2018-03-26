@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选择企业页</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+</head>
+<body style="background-color: #fff;">
+<div class="en-nav">
+    <div class="w " ><img src="../images/logo2.png" alt=""></div>
+</div>
+<div class="en-nimg"><div class="w"><img src="../images/title1.png" alt=""></div></div>
+
+<div id="en_wrapper" class="en_wrapper w">
+    <div id="en_fm" class="en_form">
+        <div class="en_form_wrapper" id="en_form_wrapper">
+            <form name="f" id="search" action="/s" class="fm" onsubmit="javascript:F.call('ps/sug','pssubmit');"target="" style="width: 596px;border: 0">
+                <!--列表-->
+                <div class="en-bdsug" style="height: auto;display: none">
+                    <ul></ul>
+                </div>
+
+                <!--搜索框-->
+                <span id="ipt_wrap" class="ipt_wrap">
+                    <input type="text" class="en_ipt" name="wd" id="search-text" maxlength="100" autocomplete="off" placeholder="请输入公司名称">
+                </span>
+
+                <!--点击按钮-->
+                <span class="en_btn_wr" id="en_btn_wr">
+                    <div id="submit" class="en_btn">提  交</div>
+                </span>
+                
+                <!--不通过显示-->
+                <p style="margin-top: 25px;display: none;text-align: center" id="set-gs"><a href="javascript:;" id="jump-btn">没有找到我的公司，创建我的公司</a></p>
+            </form>
+        </div>
+    </div>
+ </div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script src="../js/login.js"></script>
+<script type="text/javascript">
+    $(function(){
+       enter()
+    });
+</script>
+</body>
+</html>

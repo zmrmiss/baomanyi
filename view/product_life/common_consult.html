@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>投保咨询</title>
+</head>
+<body class="bodyColor-Green">
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content">
+                <div class="consult-wrap">
+                    <div class="consult-head"></div>
+                    <div class="consult-main">
+                        <div class="consult-form">
+
+                            <div class="userphone-input">
+                                <div class="item-block">
+                                    <input type="number" name="userphone" placeholder="请输入您的手机号码" id="userphone" style="height: 4.8rem;line-height: 4.8rem;">
+                                    <div class="getcode">获取验证码</div>
+                                </div>
+                            </div>
+                            <div class="usercode-input">
+                                <div class="item-block">
+                                    <input type="text" name="usercode" placeholder="请输入验证码" id="usercode" style="height: 4.8rem;line-height: 4.8rem;">
+                                </div>
+                            </div>
+                            <div class="username-input">
+                                <div class="item-block">
+                                    <input type="text" name="username" placeholder="请输入您的称呼" id="username" style="height: 4.8rem;line-height: 4.8rem;">
+                                </div>
+                            </div>
+                            <div class="user-consult-btn">
+                                <a href="javascript:;" class="consult-btn">提交咨询</a>
+                                <p class="color-fff text-center">提交信息后，保满意专业客服会在24小时内与您联系</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="consult-foot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+    <script>
+        var myDetail;
+        var url = window.location.href.match(/type=.([^&]*)/);
+
+        if(url&&url[0].substr(5)==1){
+            var productId = window.location.href.match(/productId=.([^&]*)/)[0].substr(10);
+            var userId = window.location.href.match(/userId=.([^&]*)/)[0].substr(7);
+            var ctype = window.location.href.match(/ctype=.([^&]*)/)[0].substr(6);
+            var company = window.location.href.match(/company=.([^&]*)/)[0].substr(8);
+            var pname = window.location.href.match(/pname=.([^&]*)/)[0].substr(6);
+            myDetail = new ConsultCommon({
+                pname:pname,
+                company:company,
+                product_id:productId,
+                user_id:userId,
+                ctype:ctype, //1战略合作产品2咨询类产品
+                share:true
+            });
+            myDetail.init();
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            myDetail = new ConsultCommon({
+                pname:json.productName,
+                company:json.companyName,
+                product_id:json.productId,
+                user_id:json.userId,
+                ctype:json.ctype ,//1战略合作产品2咨询类产品
+                userName :json.userName ,
+                mobile:json.mobile
+            });
+            myDetail.init();
+        }
+
+    </script>
+</body>
+</html>

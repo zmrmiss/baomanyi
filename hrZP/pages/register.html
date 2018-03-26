@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册账号</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+<div class="banner-bg">
+    <div class="hlogo w"><img src="../images/logo.png" alt=""></div>
+    <!--注册页-->
+    <div class="reg-title" style=""><span>手机号码注册</span></div>
+    <div class="register">
+        <form action="" class="form-horizontal" role="form" id="register" novalidate="novalidate">
+            <div class="int-inp">
+                <input type="text" class="form-control vinput" id="phone-num" name="phone-num" placeholder="请输入常用手机号码" aria-required="true">
+                <span class="spa spa8"></span>
+            </div>
+            <div class="zhendx" style="width: 354px;margin-bottom: 20px;height: 46px">
+
+                <input type="text" class="form-control vinput"  id="code" name="" placeholder="请输入短信验证码" style="float: left">
+                <div class="get-code" id="getyzm" style="cursor: pointer;float: left">
+                    <span>获取验证码</span>
+                </div>
+                <span class="spa spa9" style="top: 0;"></span>
+            </div>
+            <div class="int-inp" style="width:354px;">
+                <input type="password" id="password" placeholder="请输入密码">
+                <span class="spa spa10"></span>
+            </div>
+            <div class="reg-ched">
+                <input class="acceptcb" type="checkbox" checked="checked">
+                <span>我以阅读并同意<a href="">《保满意用户协议》</a></span>
+            </div>
+            <div class="register-btn">
+                <div  class="reter-btn" id="regist">注  册</div>
+            </div>
+        </form>
+        <div class="qrcode">
+            <p>如已注册保满意APP账号请</p>
+            <div class="rec-btn"><a href="javascript:void (0)" id="back_btn">直接登录</a></div>
+            <img src="../images/qrcode.png" alt="">
+            <span>扫码下载保满意APP</span>
+        </div>
+    </div>
+</div>
+<script src="../js/config.js"></script>
+<script src="../js/jquery-1.7.2.min.js"></script>
+<!--<script src="../js/jquery.form.js"></script>-->
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script>
+    var InterValObj; //timer变量，控制时间
+    var count = 60; //间隔函数，1秒执行
+    var curCount;//当前剩余秒数
+    $(function () {
+        getreg.init();
+    })
+    window.matchTest={
+        regular:{
+            ps:/^[0-9A-Za-z]{6,16}$/,
+            ph:/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(14[0-9]{1}))+\d{8})$/,
+            yzm: /^[0-9a-zA-Z]{4}$/,
+            num:/^[0-9]*$/,
+            che:/^[\u4e00-\u9fa5]*$/
+        }
+    }
+
+    //获取token
+    function getToken(){
+        var r;
+        $.ajax({
+            type: "POST",
+            url: '//'+domain.hr+'/user/get_token',
+            data: {guid:'imei',user_id:0},
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            async: false,
+            success: function(re){
+                r = re.code == "0001200" ? re.data : 0;
+            }
+        });
+        return r;
+    }
+
+    //注册页面
+    getreg = {
+        init:function () {
+            var _this = this;
+//            _this.getdom();
+            _this.test();
+            $("#phone-num").on('input propertychange', function() {
+                _this.isAllow();
+            });
+            $("#code").on('input propertychange', function() {
+                _this.isAllow();
+            });
+            $("#password").on('input propertychange', function() {
+                _this.isAllow();
+            });
+
+            if($("input[type='checkbox']").is(':checked')==false){
+                $(".reter-btn").css("background",'#c9c9c9').attr('disabled','disabled');
+            }
+            $(".acceptcb").on("change",function () {
+                if($("input[type='checkbox']").is(':checked')==false){
+                    $(".reter-btn").css("background",'#c9c9c9').attr('disabled','disabled');
+                }else {
+                    $(".reter-btn").css("background",'#ff6900').attr('disabled',false);
+                }
+            })
+
+            $("#regist").on("click",function(){
+                if(matchTest.regular.ph.test($("#phone-num").val())&&matchTest.regular.yzm.test($("#code").val())&&matchTest.regular.ps.test($("#password").val())){
+                    if ($("#phone-num").val()!=""&&$("#code").val()!=""&&$("#password").val()!="") {
+                        if ($("input[type='checkbox']").is(':checked')==true){
+                            _this.reg();
+                        }
+
+                    }else {
+
+                    }
+
+                }else if($("#phone-num").val()==''){
+                    $(".spa8").text("未填写");
+
+                }else if($("#code").val()==''){
+                    $(".spa9").text("未填写");
+                }else if($("#password").val()==''){
+                    $(".spa10").text("未填写");
+                }
+
+            })
+
+
+            //验证码
+            $(".get-code").on("click",function(){
+                if(matchTest.regular.ph.test($("#phone-num").val())){
+                    if ($("#phone-num").val()!=""){
+                        if($(this).attr("disabled")=="disabled"){return;}
+                        _this.sendmsg();
+                    }else {
+                        $(".spa8").text("请输入正确的手机号");
+                    }
+                }else {
+                    $(".spa8").text("文本有误");
+                }
+
+
+            })
+
+            $("#back_btn").on("click",function () {
+                window.location.href='../index.html';
+            })
+
+
+
+        },
+        sendmsg: function(){
+            var _this = this;
+            if(!this.token){ this.token = getToken()}
+
+            $.ajax({
+                type:"post",
+                url:'//'+domain.cp+'/sms/send',
+                data:{token:_this.token,telphone:$("#phone-num").val(),smstype:'reg',referrer_id:_this.referrer_id},
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                async:false,
+                dataType: 'json',
+                success:function(re){
+                    console.log(re.code);
+                    if(re.code=="0002100"){
+                        alert("发送短信验证码失败")
+                    }
+                    if(re.code=="0002200"){
+                        alert("发送短信验证码成功。请注意查收");
+                        curCount = count;
+                        $("#getyzm").attr("disabled", "true");
+                        $("#getyzm").css("background", "#c9c9c9");
+                        $("#getyzm span").html( + curCount + "秒再获取");
+                        InterValObj = window.setInterval(_this.SetRemainTime, 1000); //启动计时器，1秒执行一次
+//向后台发送处理数据
+                    }
+                    if(re.code=="0002700"){
+                        $(".spa8").text(re.msg);
+                    }
+                }
+            });
+
+        },
+        //timer处理函数
+        SetRemainTime: function() {
+            if (curCount == 0) {
+                window.clearInterval(InterValObj);//停止计时器
+                $("#getyzm").removeAttr("disabled");//启用按钮
+                $("#getyzm").css("background","#ff6900");//启用按钮
+                $("#getyzm span").html("重新发送验证码");
+                code = ""; //清除验证码。如果不清除，过时间后，输入收到的验证码依然有效
+            }
+            else {
+                curCount--;
+                $("#getyzm span").html( + curCount + "秒再获取");
+            }
+
+        },
+        test: function(){
+            /************************  失焦判断  **********************************/
+            $("input").blur(function(){
+                $("#phone-num").css("border","1px solid #fff");
+                $("#code").css("border","1px solid #fff");
+                $("#password").css("border","1px solid #fff");
+
+                //手机
+                if($(this).is("#phone-num")){            //手机号判断
+
+                    if($("#phone-num").val()!=""){
+                        if(!(matchTest.regular.ph.test($("#phone-num").val()))){
+                            $(".spa8").text("请输入正确手机号");
+                            $(this).css("border","1px solid #ff6900");
+                            return false;
+                        }else if(matchTest.regular.ph){
+                            $(".spa8").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa8").text("");
+                    }
+                }
+
+                //验证码
+                if($(this).is("#code")){            //验证码判断
+
+                    if($("#code").val()!=""){
+                        if(!(matchTest.regular.yzm.test($("#code").val()))){
+                            $(".spa9").text("验证码小于4位");
+                            $(this).css("border","1px solid #fff");
+                            return false;
+                        }else if(matchTest.regular.yzm){
+                            $(".spa9").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa9").text("");
+
+                    }
+                }
+
+                //密码1
+                if($(this).is("#password")){            //密码判断
+
+                    if($("#password").val()!=""){
+                        if(!(matchTest.regular.ps.test($("#password").val()))){
+                            $(".spa10").text("请输入格式正确的密码");
+                            $(this).css("border","1px solid #fff");
+                            return false;
+                        }else if(matchTest.regular.ps){
+                            $(".spa10").text("");
+                            return true;
+                        }
+                    }else{
+                        $(".spa10").text("");
+
+                    }
+                }
+
+            })
+            /********************** 聚焦提示 ************************/
+            $("input").focus(function(){
+                if($(this).is("#phone-num")){
+//                    $(this).append()
+                    $(".spa8").text("11位手机号码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+                if($(this).is("#code")){
+                    $(".spa9").text("请输入4位数验证码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+
+                if($(this).is("#password")){
+                    $(".spa10").text("请输入密码").css("color","#ff6900");
+                    $(this).css("border","1px solid #ff6900")
+                }
+
+            })
+            // this.reg();
+        },
+        isAllow:function () {
+            this.getdom();
+        },
+        getdom: function(){
+            this.mobile = $("#phone-num").val();
+            this.code = $("#code").val();
+            this.password = $("#password").val();
+        },
+        reg: function(){
+            if(!this.token){ this.token = getToken()}
+            var _this = this;
+            this.regJson = {
+                token: _this.token,
+                telphone: _this.mobile,
+                password: _this.password,
+                tel_code: _this.code,
+                referrer_id: this.referrer_id,
+                source:1,
+                share_type: 3,
+                openid:_this.openid
+            }
+            $.post('//'+domain.hr+'/user/login/register',_this.regJson, function (re) {
+                console.log(re.msg);
+                if(re.code=='0301102'){
+                    alert(re.msg);
+                    window.location.href = "../index.html"
+                }else{
+                    $(".spa10").text(re.msg);
+                    $("#yzm").val("");
+                    $("#password").val("");
+                }
+            },'json');
+        }
+    }
+</script>
+
+</body>
+</html>

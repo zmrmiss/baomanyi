@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>我的订单</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current" id="page-fixed-tab-infinite-scroll">
+            <div class="buttons-tab fixed-tab">
+                <a href="#tab1" class="tab-link active button" data-id="0">全部</a>
+                <a href="#tab2" class="tab-link button" data-id="2">待付款</a>
+                <a href="#tab3" class="tab-link button" data-id="4">已完成</a>
+                <a href="javascript:;" class="head-tool grey-tool"><i class="iconfont icon-filter"></i>筛选订单</a>
+            </div>
+            <div class="content padding-content2 pull-to-refresh-content">  
+                <div class="tabs padding-tab">
+                    <div id="tab1" class="tab active infinite-scroll">
+                        <ul></ul>
+                    </div>
+                    <div id="tab2" class="tab infinite-scroll">
+                        <ul></ul>
+                    </div>
+                    <div id="tab3" class="tab infinite-scroll">
+                        <ul></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="/public/dist/js/web.js?v=2"></script>
+    <script>
+        var myorder = new myOrder({});
+        myorder.init();
+        myorder.scrollevent()
+
+    </script>
+    
+</body>
+</html>

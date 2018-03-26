@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="format-detection" content="telephone=no" />
+ 	<link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>资讯</title>
+</head>
+<body class="bodyColor-White">
+    <div class="news-wrap">
+        <h1 class="news-title"></h1>
+        <h2 class="news-detail">
+            <em class="news-time"></em>
+            <em class="news-good"></em>
+            <em class="news-scan"></em>
+        </h2>
+        <div class="news-content"></div>
+    </div>
+    <ul class="answer-list">
+    </ul>
+    <div class="comment-block clearfix">
+        <div class="reply-answer" id="getReply">我要发表评论……</div>
+        <div class="user-behavior news-ctrl">
+            <i class="iconfont icon-uncollect-border collect-i"></i>
+            <i class="iconfont icon-ungood-border goodnews-i"></i>
+        </div>
+    </div>
+    <div class="answer-box">
+        <div class="answer-contxt">
+            <textarea class="question-main" id="question-con" placeholder="请输入回复内容" onkeyup='countChar("#question-con","#counter");'></textarea>
+            还可以输入<em id="counter">150</em>个字
+        </div>
+        <div class="question-lab">
+            <span id="btn-issue" class="btn btn-issue">提交</span>
+            <span id="btn-cancleissue" class="btn btn-cancle">取消</span>          
+        </div>
+    </div>
+    <div class="share-bar">
+        <img src="../../public/images/public/down_logo.png" class="share-logo">
+        <div class="share-word">
+            <h3>保满意APP</h3>
+            <p>买车险就用保满意</p>
+        </div>
+        <div class="share-control">
+            <a href="javascript:;" class="rightnow-open">立即打开</a>
+            <img src="../../public/images/public/close.png" class="share-close"> 
+        </div>
+    </div>
+    <div class="btn-getCustomer">分享获客</div>
+    <div class="mask-layer"></div>
+    <div class="layer-share">请在浏览器中打开链接下载 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/app.js"></script>
+    <script>
+        var zx;
+        var url = window.location.href.match(/type=.([^&]*)/);
+
+        if(url&&url[0].substr(5)==1){
+            var id = window.location.href.match(/id=.([^&]*)/)[0].substr(3);
+            var typeId = window.location.href.match(/typeId=.([^&]*)/)[0].substr(7);
+
+            var userId = window.location.href.match(/userId=.([^&]*)/)[0].substr(7);
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+
+            new NewsContent({ // 获客写在了方法里
+                id:id,
+                token:0,
+                typeId:typeId,
+                userId: userId,
+                code: code,
+                share:true
+            });
+            
+            $(".share-bar").css("display","block");
+            $(".comment-block").css("display","none");
+            $(".rightnow-open").on("tap",function(){
+                if(isWeiXin()){
+                    $(".layer-share").css("display","block");
+                }else{
+                    new OpenApp({});  
+                }
+                $(".layer-share").on("tap",function(){
+                    $(this).css("display","none");
+                })
+            });
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            zx = new NewsContent({
+                id:json.id,
+                token:json.token,
+                userId:json.userId,
+                typeId:json.type, //1为资讯 2为培训
+                enterId:json.enterId
+            })
+        }
+        function acceptShare(){
+            zx.sharepage();
+        }
+
+    </script>
+    
+</body>
+</html>

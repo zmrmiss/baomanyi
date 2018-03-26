@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>账单详情</title>
+</head>
+<body>
+<div class="card-block flow-wrap" style="margin: 0;position: fixed;top: 0;width: 100%;z-index: 5999;font-size: 1.8rem;    line-height: 4.6rem;">
+    <div class="flex-wrap bod-botm" style="padding:0">
+        <div class="item-title ll-left"  id="iconleft"><i class="iconfont icon-arrow-left"></i></div>
+        <div class="item-title  ll-center">账单详情</div>
+
+    </div>
+</div>
+<div class="page-group">
+    <div class="page page-current">
+        <div class="content">
+            <div class="loading">
+            <div class="loading-img"></div>
+            <div class="loadding-word">加载中...</div>
+            </div>
+            <div id="contenr">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="/public/dist/js/config.js"></script>
+<script type="text/javascript" src="/public/dist/js/buy.js"></script>
+<script type="text/javascript" src="../../public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script type="text/javascript" src="../../public/dist/js/handlebars-v4.0.5.js"></script>
+<script>
+    var url = window.location.href.match(/tap=.([^&]*)/);
+    if(url&&url[0].substr(4)==1){
+        var id = window.location.href.match(/id=.([^&]*)/)[0].substr(3);
+        var myBd = new BiDet({
+            id:id
+        })
+        myBd.init();
+
+    }
+
+</script>
+<script id="bidet" type="text/x-handlebars-template">
+
+
+    <div class="card-block flow-wrap flow-bar" style="margin: 0;margin-top: 4.5rem;" >
+        <div class="flow-wrap clearfix" style="margin: 0" >
+            <div class="zd-center">
+                <div class="zd-position" >
+                    <div class="zd-pick">
+                        <img src="{{province province}}" alt="">
+                        <div class="zd-mont2">￥<span>{{price}}</span></div>
+                    </div>
+
+                </div>
+
+                <div class="zd-success">交易成功</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-block flow-wrap" style="margin: 0">
+        <div class="flex-wrap bod-botm">
+            <div class="zd-sess">商品说明</div>
+            <div class="zd-time" style="line-height:2.4rem;"> <span  class="province"></span> {{package package}}流量充值卡 {{type type}} 立即生效 月底失效</div>
+        </div>
+    </div>
+    <div class="card-block flow-wrap bod-botm" style="    margin-bottom: 0;">
+        <div class="flex-wrap">
+            <div class="zd-sess" style="line-height: 3.6rem">创建时间</div>
+            <div class="zd-time" >{{create_time}}</div>
+        </div>
+    </div>
+    <div class="card-block flow-wrap bod-botm" style="    margin-bottom: 0;">
+        <div class="flex-wrap">
+            <div class="zd-sess" style="line-height: 3.6rem">充值号码</div>
+            <div class="zd-time" >{{telephone}}</div>
+        </div>
+    </div>
+    <div class="card-block flow-wrap bod-botm" >
+        <div class="flex-wrap" id="LlCzzt">
+            <div class="zd-sess" style="line-height: 3.6rem">充值状态</div>
+            <div class="zd-time" >{{api_status api_status}}</div>
+        </div>
+    </div>
+    <div class="card-block flow-wrap flow-bar bod-botm jy-zf" style="padding:0;position: relative;display: none">
+
+        <!--<div class="flow-wrap clearfix flow-wx" >-->
+        <!--<div class="item-title zf-name"><img src="../../public/images/images/nana_weixin.png" alt=""></div>-->
+        <!--<div class="item-title color-575757 cat-exp wx-exp">-->
+        <!--<span>微信支付</span>-->
+        <!--</div>-->
+        <!--<div class="item-title color-808080 cat-exp " style="height:1.5rem;line-height: 2rem">推荐安装微信5.0及以上版本的用户使用</div>-->
+        <!--</div>-->
+
+        <div class="flow-wrap clearfix flow-zfb" >
+            <div class="item-title zf-name" ><img src="../../public/images/images/nana_zhifubao.png" alt=""></div>
+            <div class="item-title color-575757 cat-exp zfb-exp"><span>支付宝</span></div>
+            <div class="item-title color-808080 cat-exp" style="height:1.8rem;line-height: 2rem;">推荐有支付宝账号的用户使用</div>
+        </div>
+        <div>
+            <i class="iconfont icon-selected-single xzbtn di-color" style="font-size: 2.8rem;"></i>
+            <!--<i class="iconfont icon-success xzbtn" style="font-size:2.8rem;top: 5rem;"></i>-->
+            <!--<i class="iconfont icon-selected-single" style="font-size:2.4rem;color:#c2844d;position: absolute;top: 5rem;right:1.6rem"></i>-->
+        </div>
+    </div>
+
+    <div class="suer_btn" style="display: none">确认支付</div>
+</script>
+
+</body>
+</html>

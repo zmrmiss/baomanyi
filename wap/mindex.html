@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>买车险，就用保满意！</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!--<link rel="shortcut icon" href="images/favicon.ico">-->
+	<meta name="description" content="保满意以车险交易为切入点，整合线上线下资源，打造创新型互联网保险综合服务平台。平台提供车险一键比价、保险人工咨询对接等优质服务。我们致力于让每个人都能便捷、高效的买到合适的保险，让每位保险经纪人都能精准获客、高效展业，一起构建保险业新生态。">
+	<meta name="keywords" content="保满意,车险，保满意app,保满意官网,互联网保险,买什么保险,买什么保险 合适,性价比高 保险,保险 特卖,汽车保险,理财保险,社会 医疗 保险,养老 保险,分红保险,健康险,团体保险,少儿险,意外险,女性保险,责任险,重大疾病保险,个人保险,团体保险,保险 投诉 咨询,保险 新闻 资讯,投保,保险理赔,保险案例,保险资料 知识,保险产品,保险公司,保险公司排名,人寿保险公司,财产保险公司">
+	<meta name="MobileOptimized" content="320"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0,user-scalable=no,minimum-scale=1.0, maximum-scale=1.0,width=device-width">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no, email=no">
+	<link rel="stylesheet" type="text/css" href="mindex_files/play.css">
+</head>
+<body style="position: absolute;width: 100%;height: 100%;margin: 0;">
+<div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+
+<img src="mindex_files/sharelogo.jpg" >
+</div>
+ 	<div data-kzplayer="main" id="phone-main" class="phone-main">
+		<div style="display: none;" data-kzplayer="loading" id="loading_page">
+			<div class="loading_inner" style="width:100%;height:100%;background:rgba(31, 43, 57,1)">
+				<p class="logo"><img src=""></p>
+				<span id="load_bar_text" style="color:rgba(255,255,255,1)" class="loaded_text">100%</span>
+				<div class="loading animated">
+					<div style="background-color: rgb(255, 255, 255); width: 100%;" class="loaded" id="load_bar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+    var SOHUZ = {page: {site_id: "5834189157", page_id: "0", mode: "preview", tpl_id: "5834189157"}};
+</script>
+<script src="../public/dist/js/config.js"></script>
+<script src="./mindex_files/zepto.js"></script>
+<script type='text/javascript' src="./mindex_files/kzPlayer.js"></script>
+<script>
+	$(function () {
+        $.ajax({
+            url: '//'+domain.jc+'/user/setting/getApkUpUrl',
+            type: "POST",
+            data: {},
+            async:true,
+            cache: false,
+            dataType: "json",
+            success: function(re){
+                if (re.code == '0001000') {
+                    $("#addapk").attr('href',re.data);
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>

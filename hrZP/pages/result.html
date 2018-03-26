@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>审核结果页</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+
+</head>
+<body style="background-color: #fff;">
+<div class="en-nav">
+    <div class="w"><img src="../images/logo2.png" alt=""></div>
+</div>
+<div class="en-nimg"><div class="w"><img src="../images/title1.png" alt=""></div></div>
+<div class="w resul">
+    <div class="res-wor"><span>您的企业信息审核被驳回，请根据驳回原因修改并<a href="javascript:void (0)" id="toaudit">重新提交审核</a></span></div>
+    <div class="res-reply"><span class="reply-info">公司地址不真实公司地址</span></div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script src="../js/login.js"></script>
+<script src="../js/config.js"></script>
+<script>
+    $(function () {
+        $("#toaudit").on("click",function () {
+            window.location.href='audit.html'
+        })
+
+        $.ajax({
+            type:"post",
+            url:'//'+domain.hr+'/hr/company/Review/status',
+            data:{'token':recruit.token},
+            dataType: 'json',
+            success:function(re){
+                $(".reply-info").text(re.data.reason)
+            }
+        });
+    })
+</script>
+</body>
+</html>

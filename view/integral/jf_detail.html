@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <link rel="stylesheet" href="../../public/debug/css/swiper.min.css">
+    <title></title>
+    <style>
+        .iconfont:before{
+            font-size: 1.2rem;
+            color: #ff6900;
+            padding-right: .2rem;
+
+        }
+        #lbo{
+            width: 500%;
+            overflow: hidden;
+        }
+        #lbo li{
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-container {
+            width: 100%;
+            height: 16rem;
+
+        }
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+        .swiper-slide img{
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-pagination span {
+            text-align: right;
+
+        }
+        .swiper-pagination-bullet{
+            background-color: #fff;
+            opacity: 1
+        }
+        .swiper-pagination-bullet-active{
+            background-color: #ff6900;
+        }
+        .swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
+            margin-bottom: -0.4rem;
+        }
+        table{
+            width: 100%;
+
+        }
+        img{
+            width: 100%;
+            height: 50%;
+        }
+        .jf-yiny{
+            height:30px;position: absolute;bottom:2px;left:0;background: url(../../public/images/images/nana_shangpinyinying.png) repeat-x;z-index:3;width: 100%;
+        }
+        b{
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<div class="page-group">
+    <div class="page page-current">
+        <div class="content">
+            <div class="loading">
+                <div class="loading-img"></div>
+                <div class="loadding-word">加载中...</div>
+            </div>
+            <div id="jfcontenr">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="forbtn"></div>
+
+<script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+<script type="text/javascript" src="../../public/dist/js/swiper.min.js"></script>
+<script type="text/javascript" src="../../public/dist/js/city/citypicker02.min.js"></script>
+<script type="text/javascript" src="../../public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script type="text/javascript" src="../../public/dist/js/handlebars-v4.0.5.js"></script>
+<!--<script src="../../public/debug/js/recdetal.js"></script>-->
+</body>
+<script>
+    var myJf;
+
+    var url = window.location.href.match(/type=.([^&]*)/);
+
+    if(url&&url[0].substr(5)==4){
+        var Id = window.location.href.match(/Id=.([^&]*)/)[0].substr(3);
+        var myJf= new JfInt({
+            token:'0',
+            id:Id
+        })
+        myJf.init();
+
+        $("body").append(CNZZ);
+    }
+
+    if(url&&url[0].substr(5)==1){
+        var id = window.location.href.match(/id=.([^&]*)/)[0].substr(3);
+        var myJf= new JfInt({
+            token:'0',
+            id:id,
+            ht:1
+        })
+        myJf.init();
+
+//        $("body").append(CNZZ);
+    }
+
+    function accept(rs){
+        var json = $.parseJSON(rs);
+        myJf= new JfInt({
+            token:json.token,
+            id:json.id
+        })
+        myJf.init();
+    }
+
+    //分享调用的方式
+
+    function acceptShare(){
+        myJf.sharepage();
+    }
+</script>
+
+<script id="shopping" type="text/x-handlebars-template">
+
+
+
+    <div id="cn_img"></div>
+    <div class="card-block int-wrap zm-name">
+        <div class="color-808080 font-four int-tilte">{{name}}</div>
+    </div>
+    <div class="card-block int-wrap" style="height:2rem;padding-bottom: 0.4rem;" >
+        <div class="color-FF6900 font-four">积分 <span>{{buy_scores}}</span></div>
+    </div>
+
+    <div class="card-block int-wrap int-jf" style="padding-bottom: 0.4rem;" id="purchase">
+        <div class="" style="font-size:1rem;">每人限购 <i>{{num_limit}}</i> 次</div>
+    </div>
+    <div class="card-block int-wrap int-jf" style="padding-right: 0;padding-bottom: 0.4rem;" id="pur_time">
+        <div class="" style="font-size:1rem;">限购时间： {{start}}-{{end}}</div>
+    </div>
+    <div class="int-wrap" style="height:2.8rem;background-color:#f7f7f7">
+        <div class="int-detail"><span>商品详情</span></div>
+    </div>
+
+    <div class="card-block img-scroll" style="height: auto;line-height: 1.8rem;padding: 0.8rem 0;">
+        {{{describe}}}
+    </div>
+
+
+
+
+
+</script>
+
+<script id="text" type="text/x-handlebars-template">
+    <div class="btn-insure" style="border: 0 ;padding: 0 1.4rem;height: 6rem;">
+        <div class="intsure_btn" id="intsure_btn">立即兑换</div>
+    </div>
+
+    <div class="card-block int-change">
+        <div class="fx-img"><img src="../../public/images/images/nana_fxdk_logo.png" alt=""></div>
+        <div class="insure_btn">立即打开</div>
+    </div>
+
+    <!--弹框-->
+    <div class="card-block int-alert">
+        <div class="ale-Harvest">
+            <div class="Har-title">
+                <span>收货地址</span>
+                <i class="iconfont icon-close1"></i>
+            </div>
+            <div class="alr-wrap">
+                <div class="ale-conter">联系人</div>
+                <div><input type="text" placeholder="请输入姓名" id="linkman"></div>
+            </div>
+            <div class="alr-wrap">
+                <div class="ale-conter">联系方式</div>
+                <div><input type="text" placeholder="请输入联系方式" id="telephone"></div>
+            </div>
+            <div class="alr-wrap">
+                <div class="ale-conter">选择地区</div>
+                <div style="position: relative;"><input type="text" id="city-type" placeholder="请选择地区" readonly></div>
+                <i class="iconfont icon-arrow-right"></i>
+            </div>
+            <div class="alr-area"><textarea name="" id="address" placeholder="请填写详细地址"></textarea></div>
+            <div class="alr-jf">本次扣除积分： <span id="jf-num"></span></div>
+            <div class="exchange">
+                <div class="exc_btn" id="exc_btn">兑换</div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="jfimg" type="text/x-handlebars-template">
+    <div class="card-block" id="Img_height" style="margin:0;position: relative;">
+        <div class="flex-wrap is-spread" style="padding: 0">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {{#each picture}}
+                    <div class="swiper-slide"><img src="{{this}}" alt=""></div>
+                    {{/each}}
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Add Arrows -->
+                <div style="height:30px;position: absolute;bottom:0;left:0;background: url(../../public/images/images/nana_shangpinyinying.png) repeat-x;z-index:3;width: 100%;"></div>
+
+            </div>
+        </div>
+    </div>
+</script>
+
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>健康宝肝疾病保险</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content">
+                <div class="card-block product-card">
+                    <div class="banner-jkb"></div>
+                    <h1>健康宝肝疾病保险</h1>
+                    <p>国内首款，为您的肝脏保驾护航</p>
+                </div>
+                <div class="card-block product-wrap">
+                    <div class="flex-wrap is-spread">
+                        <span class="price-sex"></span>   
+                    </div>
+                </div>
+                <div class="card-block product-wrap">
+                    <div class="flex-wrap">
+                        <div class="item-title">承保年龄：16-65岁</div>
+                        <div class="item-title">保险期间：1年</div>
+                    </div>
+                </div>
+                <div class="card-block product-wrap">
+                    <h1 class="insure-title bod-botm"><i class="iconfont icon-coverage"></i>保障范围</h1>
+                    <div class="flex-wrap bod-botm detail-show" data-id="1">
+                        <div class="item-title">肝癌</div>
+                        <div class="item-content">1万元/份<i class="iconfont icon-arrow-down"></i></div>
+                    </div>
+                    <div class="item-detail" data-id="1">
+                        被保险人在本合同生效日起 90 日后，或在续保情形下，首次发生并被确诊为肝癌，本公司按保险金额给付肝癌保险金。
+                    </div>
+                    <div class="flex-wrap bod-botm detail-show" data-id="2">
+                        <div class="item-title">失代性肝硬化</div>
+                        <div class="item-content">1000元/份<i class="iconfont icon-arrow-down"></i></div>
+                    </div>
+                    <div class="item-detail" data-id="2">
+                        被保险人在本合同生效日起满 90 日后，或在续保情形下，首次发生并被确诊为失代偿性肝硬化，本公司按保险金额的 10%给付肝硬化保险金。
+                    </div>
+                </div>
+                <div class="card-block product-wrap">
+                    <a href="bmy://app.page/document/?docAddress=/public/pdf/jkb/附件4、短期健康险重要告知.doc" target="_blank" id="js-zygz">
+                        <div class="flex-wrap bod-botm">
+                            <div class="item-title">重要告知</div>
+                            <div class="item-content"><i class="iconfont icon-arrow-right"></i></div>
+                        </div>
+                    </a>
+                    <a href="bmy://app.page/document/?docAddress=/public/pdf/jkb/健康宝肝疾病保险条款[2009].pdf" target="_blank" id="js-bxtk">
+                        <div class="flex-wrap bod-botm">
+                            <div class="item-title">保险条款</div>
+                            <div class="item-content"><i class="iconfont icon-arrow-right"></i></div>
+                        </div>
+                    </a>
+                    <a href="bmy://app.page/document/?docAddress=/public/pdf/jkb/信息披露-健康宝.docx" target="_blank" id="js-xxpl">
+                        <div class="flex-wrap">
+                            <div class="item-title">信息披露</div>
+                            <div class="item-content"><i class="iconfont icon-arrow-right"></i></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="card-block product-wrap card-prodimg">
+                    <img src="../../public/images/news/img_1.png">
+                    <img src="../../public/images/news/img_2.png">
+                    <img src="../../public/images/news/img_3.png">
+                    <img src="../../public/images/news/img_4.png">
+                    <img src="../../public/images/news/img_5.png">
+                    <img src="../../public/images/news/img_6.png">
+                    <img src="../../public/images/news/img_7.png">
+                    <img src="../../public/images/news/img_8.png">
+                    <img src="../../public/images/news/img_9.png">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-insure">
+        <a href="bmy://app.call/phone?phone=4001630099" class="js-kefu"><i class="iconfont icon-service"></i></a>
+        <em class="insure-price"></em>
+        <div class="to-insure">立即投保</div>
+    </div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+    <script>
+        var myDetail;
+        var url = window.location.href.match(/type=.([^&]*)/);
+        GetTel();
+        if(url&&url[0].substr(5)==1){
+            $(".js-kefu").attr("href",kf_phone);
+            $("#js-zygz").attr('href','../../public/pdf/jxn/附件4、短期健康险重要告知.doc');
+            $("#js-bxtk").attr('href','../../public/pdf/jxn/健康宝肝疾病保险条款[2009].pdf');
+            $("#js-xxpl").attr('href','../../public/pdf/jxn/信息披露-健康宝.docx');
+
+            var userId = window.location.href.match(/userId=.([^&]*)/)[0].substr(7);
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+            var eUid = window.location.href.match(/eUid=.([^&]*)/)[0].substr(5);
+            var hk = localStorage.getItem("hkjkb")=="161116002"?1:0;
+            localStorage.setItem("shareType","2");
+            localStorage.setItem("eUid",eUid);
+            
+            if(code&&!hk){
+                var myoc = new ObtainClient({
+                    user_id: userId,
+                    code: code,
+                    share_title: '健康宝肝疾病保险',
+                    share_id: 161116002,
+                    share_type: 2
+                });
+                myoc.init();
+                localStorage.setItem("hkjkb","161116002")
+            }
+            
+            var flag = 1;
+            $(".to-insure").on("tap",function(){
+                var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+                if(userInfo){
+                    userInfo = userInfo.split(",");
+                    if(flag){
+                        flag = 0;
+                        $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                            flag = 1;
+                            if(re.code == '0001000'){
+                                window.location.href = "jkb_insure.html?type=1&userId="+userId;
+                            }else{
+                                window.location.href = "../user/login.html";
+                            }
+                        },'json');
+                    }
+                }else{
+                    window.location.href = "../user/login.html";
+                }
+            });
+            myDetail = new DetailJkb({
+                productId:161116002
+            });
+            myDetail.price();
+
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+
+            myDetail = new DetailJkb({
+                enterid:json.enterId,
+                userId:json.userId,
+                eUid:json.encryptUid,
+                productId:161116002
+            });
+            myDetail.init();
+        }
+
+        function acceptShare(){
+            myDetail.sharepage();
+        }
+
+        $(function() {
+            $(".detail-show").on("tap",function(){
+                var id = $(this).data("id");
+                var sel = $(".item-detail[data-id='"+id+"']");
+                if(sel.hasClass("showbox")){
+                    sel.removeClass("showbox");
+                    $(".iconfont",this).removeClass("icon-arrow-up");
+                }else{
+                    sel.addClass("showbox");
+                    $(".iconfont",this).addClass("icon-arrow-up");
+                }
+            })
+        })
+    </script>
+</body>
+</html>

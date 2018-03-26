@@ -1,0 +1,1 @@
+window.domain={jc:"jc.dev.baomanyi.com.cn",sx:"sx.dev.baomanyi.com.cn",cx:"cx.dev.baomanyi.com.cn",wd:"wd.dev.baomanyi.com.cn",gc:"gc.dev.baomanyi.com.cn",xc:"xc.dev.baomanyi.com.cn",cp:"cp.dev.baomanyi.com.cn",xq:"xq.dev.baomanyi.com.cn",zp:"zp.dev.baomanyi.com.cn",hr:"hr.dev.baomanyi.com.cn"};

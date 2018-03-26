@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title style="display: none"></title>
+    <style>
+        .button{
+            padding: 0 1rem;
+        }
+        .content-block{
+            margin: 0;
+            color: #6d6d72;
+
+        }
+        .buttons-tab .button{
+            border-bottom-width: 6px;
+        }
+        .native-scroll{
+            background-color: #fff;
+        }
+        .content-block i.iconfont{
+            font-size: 20px;color: #ff6900;float: left;    height: 3.7rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content">
+                <div class="loading">
+                    <div class="loading-img"></div>
+                    <div class="loadding-word">加载中...</div>
+                </div>
+                <div id="contenr">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--底部确定按钮-->
+    <div id="btnhold" style=" position: fixed; right: 0; bottom: 0; left: 0; width: 100%;z-index: 2000;"></div>
+
+    <!--弹框-->
+    <div id="alertenf" style="z-index: 2001">
+        <div class="dema-alert">
+            <div class="dema-succ">
+                <div class="iconfont icon-success"></div>
+                <div class="dema-tsd">您已经预约服务者，耐心等待TA联系你吧</div>
+            </div>
+            <div class="dema-foss">
+                <div class="dema-old">联系TA</div>
+                <div style="margin-left: 7rem">手机号：<span class="dema-tel" >{{phone}}</span></div>
+                <div style="margin-left: 7rem">微信号：<span class="dema-wechat" style="margin-left: 0.2rem;">{{wechat}}</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!--待用-->
+    <div data-value="" id="serveridv" style="display: none"></div>
+    <!--评论输入框-->
+    <div class="answer-box">
+        <div class="answer-contxt">
+            <textarea class="question-main" id="question-con" placeholder="请输入评论内容..." style="padding: 1rem" onkeyup='countChar("#question-con","#counter");'></textarea>
+            还可以输入<em id="counter">150</em>个字
+        </div>
+        <div class="question-lab">
+            <span id="btn-issue" class="btn btn-issue">提交</span>
+            <span id="btn-cancleissue" class="btn btn-cancle">取消</span>
+        </div>
+    </div>
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/handlebars-v4.0.5.js"></script>
+    <script type="text/javascript" src="/public/dist/js/buy.js"></script>
+    <script>
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            var myDE = new Demand({
+                token:json.token,
+                userId:json.userId,
+                id:json.id,//服务id
+                servicer_id:json.servicer_id,//服务者id
+                cate_id:json.cate_id,//服务分类id
+                lat:json.lat,//维度
+                lon:json.lon//经度
+            })
+            myDE.init();
+        }
+        function loginSuccess(rs){
+            var json = $.parseJSON(rs);
+            myDE.initloginSuccess(json);
+        }
+    </script>
+    <script id="tpl" type="text/x-handlebars-template">
+        <div class="card-block dema-wrap" style="margin-bottom: 0">
+            <img src="{{servicer.avator}}" alt="" class="bgc-img" >
+            <div class="dema-s">
+                <div class="dema-bgc"></div>
+                <div class="flex-wrap is-spread dema-m">
+                    <div class="dema-img"><img src="{{servicer.avator}}" alt=""></div>
+                </div>
+                <div class="flex-wrap is-spread dema1">
+                    <div class="" style="margin: 0 auto">
+                        <span class="dema-name" id="dema-name">{{{servicer.real_name}}}</span>
+                        <i class="iconfont icon-xingbienan" style="color: #64b1f9;font-size: 12px"></i>
+                        <span class="dema-year">{{servicer.age}}</span>岁
+                    </div>
+                </div>
+                <div class="flex-wrap is-spread dema2">
+                    <div class="" style="margin: 0 auto">
+                        <span class="dema-add">{{servicer.company_name}}</span>
+                    </div>
+                </div>
+                <div class="flex-wrap is-spread dema3">
+                    <div class="" style="margin: 0 auto">
+                        <i class="iconfont icon-location" style="font-size: 12px"></i>
+                        <span class="dema-fodz">{{servicer.pcr_name}}</span>
+                        <span id="fw-distance"></span>
+                    </div>
+                </div>
+                <div class="flex-wrap is-spread dema4">
+                    <div class="authen">
+                        <i class="iconfont icon-shoujirenzhengbiaoshi" style=""></i>
+                        <span>手机认证</span>
+                    </div>
+                    <div class="authen">
+                        <i class="iconfont icon-shimingrenzhengbiaoshi"></i>
+                        <span>身份认证</span>
+                    </div>
+                    <div class="authen">
+                        <i class="iconfont icon-zizhirenzhengbiaoshi"></i>
+                        <span>资质认证</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="photos"></div>
+        <div class="native-scroll" id="nativescroll">
+            <div class="dema-nav">
+                <div class="buttons-tab" style="position: absolute;width: auto;">
+                    {{#each ser_list}}
+                    <a href="#tab1" class="tab-link button">{{name}}</a>
+                    {{/each}}
+                </div>
+            </div>
+
+        </div>
+        <div id="damachacon" style="background:#fff"></div>
+
+        <!--教育经历-->
+        <div id="edufor"></div>
+
+
+        <!--资格认证-->
+        <div class="card-block" id="zizhi">
+            <div class="content-block dema-title">
+                <i class="iconfont icon-zizhirenzheng"></i>
+                <span class="dema-font">资格认证</span>
+            </div>
+            <div class="content-block share-bottom" style="padding-bottom: 1.3rem">
+                <div class="flex-wrap is-spread zstyle">
+                    <img src="{{zizhi.occupation_img_thumb_url}}" id="zsimg" alt="" style="width: 100%;height: 100%">
+                </div>
+            </div>
+        </div>
+
+        <!--服务评价-->
+        <div id="comment"></div>
+
+
+
+
+
+
+    </script>
+    <script id="damacha" type="text/x-handlebars-template">
+        <div class="content-block"  style="padding: 0">
+            <!--服务时间-->
+            <div class="content-block share-bottom" style="height: 3rem;line-height: 3rem;padding-top:0.7rem">
+                <i class="iconfont icon-fuwushijian" style="height: 3rem;"></i>
+                <span class="dema-font" style="line-height: 3rem;">服务时间</span>
+            </div>
+            <div class="is-spread dema-day">
+                {{#each services.week}}
+                <a href="" class="color-a5a5a5 dema-sun">{{this}}</a>
+                {{/each}}
+            </div>
+
+            <!--服务价格-->
+            <div class="content-block dema-title dema-bord">
+                <i class="iconfont icon-fuwujiage" style='height: 3.7rem;'></i>
+                <span class="dema-font">服务价格</span>
+                <span class="dema-mon" id="cor_money" style="margin-left: 14px;"><i>{{services.price_offline}}</i>元/次</span><span class="dema-mon" id="tel_money" style="margin-left: 14px;"><i>{{services.price_phone}}</i>元/分钟</span>
+            </div>
+
+            <!--服务方式-->
+            <div class="content-block dema-title dema-bord">
+                <i class="iconfont icon-fuwufangshi"></i>
+                <span class="dema-font" style="margin-right: 14px;">服务方式</span>
+                <span class="dema-style" ></span>
+            </div>
+
+            <!--服务介绍-->
+            <div class="content-block dema-title">
+                <i class="iconfont icon-fuwujieshao"></i>
+                <span class="dema-font" style="line-height: 3.8rem;">服务介绍</span>
+            </div>
+            <div class="content-block dema-bord share-bottom">
+                <div class="flex-wrap is-spread dema-qt">
+                    <span class="dema-js">{{services.describe}}</span>
+                </div>
+                <div class="flex-wrap is-spread" style="height:4rem;">
+                    <div class="scroll-btn">
+                        <div class="scr-titl">
+                            <div class="iconfont icon-yuyin" style="width:1rem"></div>
+                        </div>
+                        <audio id="beep-one" src="{{services.sound}}" controls="controls" preload="auto" style="display:none">
+                            Your browser isn&#39;t invited for super fun time.
+                        </audio>
+                        <div class="scr-miss" style=""><span class="scr-min">
+
+                            <div id="mins" style="display:inline-block"></div><i></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--服务优势-->
+            <div class="content-block dema-title">
+                <i class="iconfont icon-fuwuyoushi"></i>
+                <span class="dema-font">服务优势</span>
+            </div>
+            <div class="content-block clearfix share-bottom">
+                <div class="flex-wrap is-spread dema-qt" style="margin-bottom: 1.3rem;">
+                    <span class="dema-ys">{{services.advantage}}</span>
+                </div>
+
+            </div>
+            <div class="pur-bw"></div>
+
+        </div>
+    </script>
+
+    <!--照片-->
+    <script id="photosc" type="text/x-handlebars-template">
+        <div class="card-block dema-wrap" style="height: 9.5rem;">
+            <div class="is-spread" style="height:100%;padding: 1.34rem 1.34rem 1.7rem">
+                {{#each photos}}
+                <div class="dema-ps" style="margin-right:3.4%;float:left"><img src="{{this}}" alt="" style="width: 100%;height: 100%;"></div>
+                {{/each}}
+                <div class="dema-ps" id="img-tz" style="color:#fff;line-height: 6.4rem;text-align: center;float:left">更多...</div>
+            </div>
+            <div id="page" class="fenye"></div>
+        </div>
+    </script>
+
+    <!--教育-->
+    <script id="eduisur" type="text/x-handlebars-template">
+        <div class="card-block">
+            <div class="content-block dema-title">
+                <i class="iconfont icon-jiaoyujingli"></i>
+                <span class="dema-font">教育经历</span>
+            </div>
+            <div class="content-block share-bottom" style="padding-bottom: 1.3rem">
+                {{#each edu}}
+                <div class="flex-wrap is-spread dema-qt">
+
+                    <span>{{this.institution}}</span>
+                </div>
+                <div class="is-spread dema-qt">
+                    <span>{{this.starttime}}</span> 至 <span>{{this.endtime}}</span>
+                </div>
+                <div class="flex-wrap is-spread dema-qt" style="padding-bottom: 1rem;">
+                    <span>{{this.education}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="pur-bw"></div>
+    </script>
+
+    <!--服务评价-->
+    <script id="commentlink" type="text/x-handlebars-template">
+        <div class="dema-csp">
+            <div class="dema-text">
+                <em style="left: 0;"></em>
+                <span>服务评价</span>
+                <em style="right: 0;"></em>
+            </div>
+            <ul>
+                <li class="rcote-li" >
+                    <div class="rcode-pub" style="">
+                        <div class="rcode-img"><img src="{{comment.avator}}" alt="" id="rcode-rp"></div>
+                        <div class="rcode-pec">
+                            <div style="position: relative;top:0">
+                            <span class="rcode-name">{{comment.real_name}}
+                                <span class="rcode-padd">
+                                    (<i class="iconfont icon-xingbienan rcode-sex"></i>
+                                    <span class="rcode-age">{{comment.age}}</span>岁)</span>
+
+                            </span>
+                                <span class="rcode-year" style="display: inline-block;width: 100%;height: 1rem;">{{comment.create_dt}}</span>
+                            </div>
+                        </div>
+                        <div class="rcode-text">{{comment.content}}</div>
+                    </div>
+                </li>
+                <div id="conceal"></div>
+            </ul>
+            <div class="flex-wrap">
+                <div class="eval-btn">+ 查看更多评价</div>
+            </div>
+        </div>
+    </script>
+
+
+    <!--底部按钮-->
+    <script id="buttontap" type="text/x-handlebars-template">
+        <div class="comment-block clearfix db-touch">
+            <div class="flex-wrap db-pubs">
+                <div class="her-an">约TA</div>
+                <div class="her-com"><i class="iconfont icon-pinglun"></i>评论</div>
+                <div class="her-fab" id="her-fab">
+                    <i class="iconfont icon-good"></i>
+                    <div class="her-num">{{services.likes}}</div>
+                </div>
+
+            </div>
+        </div>
+    </script>
+
+    <!--弹出层-->
+    <script id="alertfouse" type="text/x-handlebars-template">
+        <div class="dema-alert" style="z-index: 2001">
+            <div class="dema-succ">
+                <div class="iconfont icon-success"></div>
+                <div class="dema-tsd">您已经预约服务者，耐心等待TA联系你吧</div>
+            </div>
+            <div class="dema-foss">
+                <div class="dema-old">联系TA</div>
+                <div style="margin-left: 7rem">手机号：<span class="dema-tel" >{{phone}}</span></div>
+                <div style="margin-left: 7rem">微信号：<span class="dema-wechat" style="margin-left: 0.2rem;">{{wechat}}</span></div>
+            </div>
+        </div>
+    </script>
+
+    <!--隐藏评论-->
+    <script id="concealre" type="text/x-handlebars-template">
+        {{#each data}}
+        <li class="rcote-li"  style="margin-top:.5rem">
+            <div style="width:100%;height:0.7rem;"></div>
+            <div class="rcode-pub" style="">
+                <div class="rcode-img"><img src="{{avator}}" alt="" id="rcode-rp"></div>
+                <div class="rcode-pec">
+                    <div style="position: relative;top:0">
+                            <span class="rcode-name">{{real_name}}
+                                <span class="rcode-padd">
+                                   ( <i class="iconfont icon-xingbienan rcode-sex"></i>
+                                    <em class="rcode-age">{{age}}</em>岁 )</span>
+                            </span>
+                        <span class="rcode-year" style="display: inline-block;width: 100%;height: 1rem;">{{create_dt}}</span>
+                    </div>
+                </div>
+                <div class="rcode-text">{{content}}</div>
+            </div>
+        </li>
+        {{/each}}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>支付宝支付</title>
+</head>
+<body>
+<script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+<script>
+    function accept(rs){
+        var json = $.parseJSON(rs);
+        var myJPs = new MeJumps({
+            token:json.token,
+            pay_methods:json.pay_methods,
+            type:json.type,
+            tvalue:json.tvalue
+        })
+        myJPs.init();
+    }
+</script>
+</body>
+
+
+</html>

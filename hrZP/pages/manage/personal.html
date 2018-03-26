@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/manage.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+</head>
+<body>
+<!--固定导航-->
+<div class="left-common">
+    <ul>
+        <li>
+            <div class="logo3"><img src="../../images/mlogo.png" alt=""></div>
+        </li>
+        <li>
+            <div class="character" id="hr_name"></div>
+        </li>
+        <li>
+            <ul class="char-list">
+                <li id="hradmin">职位管理 <i class="icot"></i></li>
+                <li id="hrmanagement">简历管理<i class="icot"></i></li>
+                <li class="char-curr">个人中心<i class="icot"></i></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!--标题开始-->
+<div class="co-banner">
+    <div class="co-name" id="togroup"></div>
+    <div class="co-img"><a href="javascript:void (0)" id="co-img"><img src="../../images/Esc.png" alt=""></a></div>
+</div>
+
+<!--个人中心页-->
+<div class="forms-wrap" id="forms-wrap">
+    <div class="infor">
+        <div class="personal">
+            <div class="per-list">
+                <ul>
+                    <li class="current">基本信息</li>
+                    <li>修改密码</li>
+                    <li>企业信息</li>
+                    <li>充值管理</li>
+                </ul>
+            </div>
+        </div>
+        <div class="per-wrap">
+            <ul>
+                <li class="per-lists active">
+                    <!--基本信息页-->
+                    <form action="" method="post" id="xinxi" style="width: 100%">
+                        <div class="xx-banner">
+                            <div class="per-hp">
+                                <div class="per-img">
+                                    <div id="preview3" style="width: 110px;display: inline-block;float: left;height: 100%;">
+                                        <img id="imghead3" border="0" src="../../images/photo1.png" style="width: 100%;height: 100%"  onclick="$('#previewImg3').click();">
+                                    </div>
+                                    <input type="file" name="file"  onchange="previewImage3(this)" style="display: none;" id="previewImg3">
+                                </div>
+                            </div>
+                            <div class="per-input">
+                                <input type="text" id="fullnamesm"  placeholder="请输入姓名">
+                                <span class="spa spa28"></span>
+                            </div>
+                            <div class="pre-btn" style="">
+                                <div id="per-submit">保存</div>
+                            </div>
+                        </div>
+                    </form>
+
+                </li>
+                <li class="per-lists">
+                    <!--修改密码页-->
+                    <form action="" id="modify" method="post" style="width: 100%">
+                        <div class="xx-banner">
+                            <div class="xx-phone">
+                                <div class="kuang">
+                                    <div class="phone-input">
+                                        <input type="password" id="passwords" placeholder="请输入新密码">
+                                        <span class="spa spa29"></span>
+                                    </div>
+
+                                    <div class="ph-yzm">
+                                        <input type="text" id="code" placeholder="请输入短信验证码" style="width: 283px">
+                                        <div class="hq-yzm" id="hq-yzm">
+                                            <span>获取验证码</span>
+                                        </div>
+                                        <span class="spa spa30"></span>
+                                    </div>
+                                </div>
+                                <div class="tel-btn">
+                                    <div id="Changeps">保存</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+                <li class="per-lists">
+                    <!--企业信息页-->
+                    <div id="Corporate">
+                        <form action="" class="form-horizontal" role="form" id="examineimg" novalidate="novalidate" style="width: 100%;margin-top:20px">
+                            <div class="audrk" style="height: 110px">
+                                <div class="aud-title" style="line-height: 110px"><div>公司LOGO</div></div>
+                                <div class="aud-img">
+                                    <div id="preview" style="width: 110px;display: inline-block;float: left;height: 100%;">
+                                        <img id="imghead" border="0" src="" style="width: 100%;height: 100%"  onclick="$('#previewImg').click();">
+                                    </div>
+                                    <input type="file" name="file" onchange="previewImage(this)" style="display: none;" id="previewImg">
+                                    <span>请上传150*150px的图片</span></div>
+                            </div>
+                        </form>
+                        <form action="" class="form-horizontal" method="post" role="form" id="examine" novalidate="novalidate" style="width: 100%">
+                            <div class="audrk">
+                                <div class="aud-title"><div>公司名称</div></div>
+                                <div class="aud-input"><input type="text" class="form-control vinput" id="fullname" name="fullname" value="" placeholder="请填写与您所在公司营业执照上一致的公司全称" aria-required="true"></div>
+                                <span class="spa spa11"></span>
+                            </div>
+                            <div class="audrk">
+                                <div class="aud-title"><div>公司简称</div></div>
+                                <div class="aud-input"><input type="text" id="shortname" name="shortname" value="" placeholder="请使用公司常用的简称"></div>
+                                <span class="spa spa12"></span>
+                            </div>
+                            <div class="audrk">
+                                <div class="aud-title"><div>公司规模</div></div>
+                                <div class="aud-input">
+                                    <div class="surplus" id="scale-wrap">
+                                        <div class="nice-select-1"  name="nice-select-1">
+                                            <input type="text"  id="headcount_other" readonly>
+                                            <ul>
+                                                <li data-value="1">0-20人</li>
+                                                <li data-value="2">20-99人</li>
+                                                <li data-value="3">100-499人</li>
+                                                <li data-value="4">500-999人</li>
+                                                <li data-value="4">1000-9999人</li>
+                                                <li data-value="4">10000人以上</li>
+                                            </ul>
+                                            <i class="iconfont icon-arrow-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="spa spa13"></span>
+                            </div>
+                            <div class="audrk">
+                                <div class="aud-title"><div>从事行业</div></div>
+                                <div class="aud-input">
+                                    <div class="surplus" id="scale-wrap">
+                                        <div class="nice-select" name="nice-select">
+                                            <input type="text" id="industry_other" name="industry_other" value="" readonly>
+                                            <ul id="wrap-list">
+                                            </ul>
+                                            <i class="iconfont icon-arrow-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="spa spa14"></span>
+                            </div>
+                            <div class="audrk">
+                                <div class="aud-title"><div>公司地址</div></div>
+                                <div class="aud-input"><input type="text" id="address" name="address" placeholder="请填写公司地址" value="{{detail.address}}" style="width:585px;"></div>
+                                <span class="spa spa15"></span>
+                            </div>
+                            <div class="audrk" style="height: auto">
+                                <div class="aud-title"><div>公司简介</div></div>
+                                <div class="aud-input" style="float: none"><textarea name="introduction" id="introduction" cols="30" rows="10" placeholder="请填写公司简介"></textarea></div>
+                                <span class="spa spa16"></span>
+                            </div>
+                        </form>
+                        <form action="" class="form-horizontal" role="form" id="elegant" novalidate="novalidate" style="width: 100%">
+                            <div class="audrk  bgimg" style="height: auto">
+                                <div class="aud-title"><div>公司风采</div></div>
+                                <div class="aud-bigimg">
+                                    <div class="fengcai" id="fengcai" style="display: inline-block">
+                                    </div>
+                                    <div id="preview2" style="width: 280px;display: inline-block;float: left;height: 180px;">
+                                        <img id="imghead2" border="0" src="../../images/photo1.png" style="width: 100%;height: 100%"  onclick="$('#previewImg2').click();">
+                                    </div>
+                                    <input type="file" name="file" style="display: none;" id="previewImg2" multiple onchange="imgChange('fengcai','aud-bigimg');" />
+                                </div>
+                            </div>
+                        </form>
+                        <div class="audrk">
+                            <div class="aud-title" style="height: 46px"><div></div></div>
+                            <div class="aud-btn"><div class="btn" id="Cor_btn">保存</div></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="per-lists">
+                    <!--充值管理页-->
+                    <form action="" id="recharge" method="post" style="width: 100%"  target="_blank">
+                        <div class="xx-banner" style="text-align: center">
+                            <div class="amount"><span id="money"></span><em>(元)</em></div>
+                            <p class="reply-mon">账户余额</p>
+                            <h2 class="prompt">每向求职者发送一条约面短信消耗0.1元</h2>
+                            <div class="audrk cz-qd">
+                                <div class="aud-title"><div>支付渠道</div></div>
+                                <div class="cs-width" id="cz-width">
+                                    <input type="radio" name="type" value="2">
+                                    <span class="cs-margin">微信支付</span>
+                                    <input type="radio" name="type" value="1" required="true" aria-required="true">
+                                    <span>支付宝</span>
+                                </div>
+                            </div>
+                            <div class="audrk cs-money">
+                                <div class="aud-title"><div>充值金额</div></div>
+                                <div class="aud-input"><input type="text" placeholder="单笔充值不能低于100元" id="money_input" name="fee" style="width:300px;"></div>
+                                <span class="spa spa31" style="top: 60px;left: -108px;"></span>
+                                <input type="hidden" name="token" id="token">
+                            </div>
+                            <div class="Recharge-btn">
+                                <div id="rech_btn">充值</div>
+                            </div>
+                        </div>
+                    </form>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--弹出框-->
+
+<div class="alecont">
+    <div class="aleclose">
+        <h4 class="clo-font" style="padding-bottom: 20px">微信扫码支付</h4>
+        <div class="clo-qrd" id="clo-qrd"></div>
+        <div class="pay-box" style="padding-top: 50px">
+            <a href="" style="">支付成功</a>
+            <a href="" style="background-color: #c9c9c9;float: right">取消支付</a>
+        </div>
+        <div class="close-btn"><img src="../../images/close.png" alt="点击关闭"></div>
+    </div>
+</div>
+
+<script src="http://www.baomanyi.com.cn/public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/handlebars-v4.0.5.js"></script>
+<script src="../../js/config.js"></script>
+<script src="../../js/jquery-1.7.2.min.js"></script>
+<script src="../../js/jquery.form.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script src="../../js/login.js"></script>
+<script src="../../js/jquery.qrcode.min.js"></script>
+
+<!--公司-->
+<script id="group" type="text/x-handlebars-template">
+    <span>{{fullname}}</span>
+</script>
+
+<!--hr-->
+<script id="hr" type="text/x-handlebars-template">
+    <div class="chap-lp">
+        <div class="char-pho"><img src="{{avator}}" alt=""></div>
+    </div>
+    <div class="char-sty"><span class="char-name">{{fullname}}</span></div>
+</script>
+<script>
+    HrPers();
+
+//    添加删除图片
+    Array.prototype.remove=function(obj){
+        for(var i =0;i <this.length;i++){
+            var temp = this[i];
+            if(!isNaN(obj)){
+                temp=i;
+            }
+            if(temp == obj){
+                for(var j = i;j <this.length;j++){
+                    this[j]=this[j+1];
+                }
+                this.length = this.length-1;
+            }
+        }
+    }
+
+    //<!--基本信息页上传图片-->
+    changehr();
+    function changehr(avator) {
+        $("#per-submit").on("click",function () {
+            if($("#fullnamesm").val()!=''){
+                $("#xinxi").ajaxSubmit({
+                    url: '//'+domain.hr+'/hr/user/Person/edit',
+                    type: "POST",
+                    data:{token:recruit.token,avator:avator,fullname:$("#fullnamesm").val()},
+                    success: function(msg) {
+                        console.log(msg);
+
+                        var data = $.parseJSON(msg);
+                        if(data.code=="0001000"){
+                            alert("修改成功")
+                        }
+                        if(data.code=="0001001"){
+                            console.log("上传错误");
+
+                        }
+
+                    },
+                    error: function(msg) {
+                        console.log("出错了");
+                    }
+                });
+            }else {
+                $(".spa28").text("请输入昵称")
+            }
+
+        })
+    }
+    function previewImage3(file)
+    {
+        var MAXWIDTH  = 110;
+        var MAXHEIGHT = 110;
+        var div = document.getElementById('preview3');
+        if (file.files && file.files[0])
+        {
+            $("#imghead3").attr("src","../../images/imgg1.gif");
+
+            $("#xinxi").ajaxSubmit({
+                url: '//'+domain.hr+'/hr/upload/Avator/send',
+                type: "POST",
+                data:{token:recruit.token},
+                success: function(msg) {
+                    console.log(msg);
+
+                    var data = $.parseJSON(msg);
+                    if(data.code=="0001000"){
+                        var avator=data.data.origin;
+                        $("#imghead3").attr("src",avator);
+                        changehr(avator);
+                    }
+                    if(data.code=="0001001"){
+                        console.log("上传错误");
+                        $("#imghead3").attr("src","../../images/photo1.png")
+                    }
+
+                },
+                error: function(msg) {
+                    console.log("出错了");
+                }
+            });
+        }
+    }
+
+
+    //<!--企业信息页-->
+
+    //    imgRemove();
+    coral();
+    function coral() {
+        $.ajax({
+            type: 'post',
+            url: '//'+domain.hr+'/hr/user/Company/detail/',
+            data: {token:recruit.token},
+            dataType: 'json',
+            cache: false,
+            success:function (data){
+                if(data.code=='0001000'){
+//                    console.log(data.data);
+                    var detail=data.data.detail;
+                    //                行业
+                    $.post('//'+domain.hr+'/job/Industry/items/', function (re) {
+                        if(re.code=="0001000"){
+                            $.each(re.data,function (index,value) {
+                                if(value.key==detail.industry){
+                                    $("#industry_other").val(value.value);
+                                    parameter.industry=value.key
+                                }
+                            })
+
+                        }
+                    },"json");
+
+//                    公司规模
+                    if(detail.headcount=='1'){
+                        $("#headcount_other").val('0-20人');
+                    }else if(detail.headcount=='2'){
+                        $("#headcount_other").val('20-99人');
+                    }else if(detail.headcount=='3'){
+                        $("#headcount_other").val('100-499人');
+                    }else if(detail.headcount=='4'){
+                        $("#headcount_other").val('500-999人');
+                    }else if(detail.headcount=='5'){
+                        $("#headcount_other").val('1000-9999人');
+                    }else if(detail.headcount=='6'){
+                        $("#headcount_other").val('10000人以上');
+                    }
+                    parameter.headcount=detail.headcount;
+                    parameter.logo=detail.logo;
+                    parameter.picture=JSON.stringify(detail.picture);
+                    $("#imghead").attr("src",detail.logo);
+                    $("#fullname").val(detail.fullname);
+                    $("#shortname").val(detail.shortname);
+
+
+                    $("#address").val(detail.address);
+                    $("#introduction").html(detail.introduction);
+                    if (detail.picture!=null){
+                        for(var i=0;i<detail.picture.length;i++){
+                            var pictures=detail.picture[i];
+                            var imgst='<div class="z_addImg"><img src="'+pictures+'"><div class="case" style="display: none;"><img src="../../images/imgclose.png" class="closeimg"></div></div>';
+                            $("#fengcai").append(imgst);
+                        }
+                    }
+
+                }
+//                console.log(data.data.owner);
+                var dats=data.data.owner;
+//                dats=0;
+                if ( dats!='1'){
+                    $("#Cor_btn").css("display","none");
+                    $("#fullname").attr("disabled",true);
+                    $("#shortname").attr("disabled",true);
+                    $("#headcount_other").attr("disabled",true);
+                    $("#industry_other").attr("disabled",true);
+                    $("#address").attr("disabled",true);
+                    $("#introduction").attr("disabled",true);
+                    $("#previewImg2").attr("disabled",true);
+                    $("#previewImg").attr("disabled",true);
+                    $('[name="nice-select"]').unbind();
+                    $('[name="nice-select-1"]').unbind();
+
+                }else {
+                    var time=null;
+                    $(".fengcai .z_addImg").each(function (index) {
+                    }).mouseenter(function () {
+                        clearTimeout(time);
+                        $this=$(this);
+                        time=setTimeout(function () {
+                            $this.children(1).slideDown();
+                        },300)
+
+                    }).mouseleave(function () {
+                        clearTimeout(time);
+                        $(".case").css("display","none");
+                    });
+                }
+                if (data.code=='0001101'){
+                    recruit.redirect();
+                }
+
+            }
+        });
+    }
+
+    //修改信息开始
+    var parameter = {logo:null, picture:null, headcount:null, industry:null,company_id:null,money:null};
+
+    $("#Cor_btn").on("click",function () {
+        imgChange();
+        $("#examine").ajaxSubmit({
+            url: '//'+domain.hr+'/hr/company/Agency/edit',
+            type: "POST",
+            data:{token:recruit.token,logo:parameter.logo,picture:parameter.picture,headcount:parameter.headcount,industry:parameter.industry,company_id:parameter.company_id},
+            success: function(data) {
+
+                console.log(data);
+                var data = $.parseJSON(data);
+//                console.log(data.data);
+                if(data.code=="0001000"){
+
+                    alert("修改成功")
+                }
+                if(data.code=="0001001"){
+                    console.log("上传错误");
+
+                }
+
+
+            },
+            error: function(msg) {
+                console.log("出错了");
+            }
+        });
+    });
+
+
+    //图片上传预览    IE是用了滤镜。
+    function previewImage(file)
+    {
+        var MAXWIDTH  = 110;
+        var MAXHEIGHT = 110;
+        var div = document.getElementById('preview');
+        if (file.files && file.files[0])
+        {
+            $("#imghead").attr("src","../../images/imgg1.gif");
+
+            $("#examineimg").ajaxSubmit({
+                url: '//'+domain.hr+'/hr/upload/Logo/send',
+                type: "POST",
+                data:{token:recruit.token},
+                success: function(data) {
+
+                    var data = $.parseJSON(data);
+                    if(data.code=="0001000"){
+                        $("#imghead").attr("src",data.data.origin);
+                        //var file=data.data.origin;
+                        console.log(data.data.origin);
+
+                        parameter.logo = data.data.origin;
+
+                        //Gsubmint(file,'','')
+                    }
+                    if(data.code=="0001001"){
+                        alert("上传错误");
+                        $("#imghead").attr("src","../images/photo1.png");
+                    }
+
+                },
+                error: function(data) {
+                    alert("出错了");
+                }
+            });
+        }
+    }
+
+    //    公司风采
+    function imgChange(obj1, obj2) {
+        //获取点击的文本框
+        var file = document.getElementById("previewImg2");
+        //存放图片的父级元素
+        var imgContainer = document.getElementsByClassName(obj1)[0];
+        //获取的图片文件
+        var fileList = file.files;
+        //文本框的父级元素
+        var input = document.getElementsByClassName(obj2)[0];
+        var imgArr = [];
+        var img_urls=[];
+        //遍历获取到得图片文件
+        $("#elegant").ajaxSubmit({
+            url: '//'+domain.hr+'/hr/upload/Style/send',
+            type: "POST",
+            //date:"upfile=upfile",
+            success: function(msg) {
+//                console.log(msg);
+                var data = $.parseJSON(msg);
+                if(data.code=="0001000"){
+
+                    for (var i = 0; i < fileList.length; i++) {
+                        var imgUrl = data.data.origin;
+                        imgArr.push(imgUrl);
+                        var img = document.createElement("img");
+
+                        img.setAttribute("src", imgArr[i]);
+//                        var files={imgUrl[]};
+
+                        var imgAdd = document.createElement("div");
+                        imgAdd.setAttribute("class", "z_addImg");
+                        var imgcase=document.createElement("div");
+                        var imgclose=document.createElement("img");
+                        imgclose.setAttribute("src","../../images/imgclose.png");
+                        imgclose.setAttribute("class","closeimg");
+                        imgAdd.appendChild(img);
+                        imgcase.setAttribute("class","case");
+                        imgcase.appendChild(imgclose);
+                        imgAdd.appendChild(imgcase);
+                        imgContainer.appendChild(imgAdd);
+                    };
+                    $("#fengcai .z_addImg>img").each(function() {
+                        img_urls.push($(this).attr("src"));
+
+                    });
+//                    console.log(img_urls);
+
+                    $(function () {
+                        var time=null;
+//                        $(".fengcai .z_addImg").each(function (index) {
+//                        }).mouseenter(function () {
+//                            clearTimeout(time);
+//                            $this=$(this);
+//                            time=setTimeout(function () {
+//                                $this.children(1).slideDown();
+//                            },300)
+//
+//                        }).mouseleave(function () {
+//                            clearTimeout(time);
+//                            $(".case").css("display","none");
+//                        });
+
+
+                    })
+                    parameter.picture=JSON.stringify(img_urls)
+
+
+                }
+            },
+            error: function(msg) {
+                alert("出错了");
+            }
+        });
+
+//        imgRemove();
+    };
+
+
+    $(".per-list ul li").on("click", function () {
+        var index=$(this).index();
+
+        $(this).addClass("current").siblings().removeClass("current");
+        $(".per-lists").eq(index).addClass("active").siblings().removeClass("active");
+        $(function () {
+
+            $(".fengcai .z_addImg .case .closeimg").each(function (index) {
+                $this=$(this);
+                $this.on("click",function () {
+                    $(".z_addImg").eq(index).css("display","none");
+//                    console.log($(".z_addImg>img").eq(index).attr('src'));
+                    var imgdie2=parameter.picture;
+                    var json = JSON.parse(imgdie2);
+                    json.remove($(".z_addImg>img").eq(index).attr('src'));
+                    var pictures=JSON.stringify(json);
+//                    console.log(ppp);
+                    parameter.picture=pictures;
+
+
+                })
+            })
+
+        })
+    })
+
+        var time=null;
+        $("#fengcai .z_addImg img").each(function (index) {
+            $(this).on('mouseenter mouseleave',function (event) {
+                if( event.type == 'mouseenter' ) {
+                    clearTimeout(time);
+                    $this=$(this);
+                    time=setTimeout(function () {
+                        $this.children(1).slideDown();
+                    },300)
+
+                } else {
+                    clearTimeout(time);
+                    $(".case").css("display","none");
+                };
+            })
+        })
+
+
+//        退出登录
+    $("#co-img").on("click",function () {
+        $.ajax({
+            type: 'post',
+            url:'//'+domain.hr+'/user/login/loginout',
+            data: {token:recruit.token},
+            dataType: 'json',
+            cache: false,
+            success:function (data){
+                console.log(data)
+                if(data.code=='0301200'){
+                    window.location.href='/index.html'
+                }
+                if(data.code=='0301100'){
+                    alert(data.msg)
+                }
+                if(data.code=='0001101'){
+                    alert(data.msg)
+                }
+            }
+        });
+    })
+</script>
+<script>
+    if(location.hash=='#chongzhi'){
+
+        $('.per-list ul li').eq(3).addClass("current").siblings().removeClass("current");
+
+        $('.per-lists').eq(3).addClass("active").siblings().removeClass("active");
+
+    }
+</script>
+</body>
+</html>

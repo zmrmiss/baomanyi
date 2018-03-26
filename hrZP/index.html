@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hr登录页</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="../public/debug/css/iconfont.css">
+	<script>var $index = true;</script>
+</head>
+<body>
+<div class="banner-bg">
+    <div class="hlogo w"><img src="images/logo.png" alt=""></div>
+    <!--登录页-->
+    <div class="indfor">
+        <form action="javascript:;" class="form-horizontal" role="form" id="sign" novalidate="novalidate">
+                <div class="int-inp">
+                    <input type="text" class="form-control vinput" id="username" name="username" placeholder="请输入已验证手机" aria-required="true">
+                    <span class="spa spa2"></span>
+                </div>
+                <div class="int-inp">
+                    <input type="password" class="form-control vinput" id="password" name="password" placeholder="请输入密码" aria-required="true">
+                    <span class="spa spa3"></span>
+                </div>
+                <div class="forget"><a href="javascript:void (0)" id="to_retrieve">忘记密码？</a></div>
+                <div class="sign"><input type="submit" class="btn" id="js-login" value="登 录"></div>
+                <div class="indfor-btn">还没有账号，<a href="javascript:void (0)" id="to_register">立即注册</a></div>
+        </form>
+
+        <div class="qrcode">
+            <img src="images/qrcode.png" alt="">
+            <span>扫码下载保满意APP</span>
+        </div>
+
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/config.js"></script>
+<script src="http://www.baomanyi.com.cn/public/dist/js/jquery.cookie.js"></script>
+<script src="js/compre.js"></script>
+<script>
+    $(function () {
+        Login.init();
+    })
+</script>
+
+</body>
+</html>

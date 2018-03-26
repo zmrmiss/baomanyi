@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+ 	<link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>买保险就用保满意</title>
+</head>
+<body class="bodyColor-Orange">
+    <div class="share-wrap">
+        <div class="share-banner"></div>
+        <div class="sharer-info">
+            <img src="" class="sharer-photo">
+            <h2></h2>
+            <p>诚邀您加入保满意，低价买保险，赚佣金</p>
+        </div>
+        <div class="share-form">
+            <div class="share-form-col">
+                <input type="text" placeholder="请输入您的手机号" name="phone-num" id="phone-num">
+                <a href="javascript:;" class="get-code">获取验证码</a>
+            </div>
+            <div class="share-form-col">
+                <input type="text" placeholder="请输入验证码" name="yzm" id="yzm">
+            </div>
+            <div class="share-form-col">
+                <input type="password" placeholder="请设置一个密码" name="password" id="password">
+            </div>
+            <div class="share-download" id="register">立即注册并下载APP</div>
+            <div class="text-center"><img src="../../public/images/share/service_yellow.png"></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/app.js"></script>
+    <script>
+        $(function (){
+
+            var url,vtoken;
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+            $.post('//'+domain.jc+'/user/get_token',{guid:'imei',user_id:0}, function (re) {
+                if(re.code=='0001200'){
+                    vtoken = re.data;
+                    reg();
+                }
+            },'json');
+
+            
+            var scode = localStorage.getItem("hkcode");
+            code = scode==code?0:code;
+
+            var openid = code==0?localStorage.getItem("hkopenid"):getOpenid(code);
+
+            function reg(){
+                url = window.location.href.match(/referrer_id=.([^&]*)/)[0].substr(12);
+                $.post('//'+domain.jc+'/user/setting/geth5view',{token:vtoken,referrer_id:url}, function (re) {
+                    if(re.code=='0001000'){
+                        $(".sharer-photo").attr("src",re.data.avator);
+                        $(".sharer-info h2").html(re.data.real_name);                      
+                        toreg();
+                    }
+                },'json');
+                
+                function toreg(){
+                    new Register({
+                        token:vtoken,
+                        referrer_id: url,
+                        openid:openid
+                    })
+                    if(!scode){
+                       localStorage.setItem("hkcode",code);
+                       localStorage.setItem("hkopenid",openid);
+                    }
+                }
+                
+            }  
+        })
+        $("body").append(CNZZ);
+    </script>
+</body>
+</html>

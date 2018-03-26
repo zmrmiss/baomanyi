@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>订单详情</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content content-bottom">
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="/public/dist/js/web.js"></script>
+    <script>
+        var url = window.location.href.match(/type=.([^&]*)/);
+
+        if(url&&url[0].substr(5)==1){
+            var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+            var status = window.location.href.match(/status=.([^&]*)/)[0].substr(7);
+            var orderId = window.location.href.match(/orderId=.([^&]*)/)[0].substr(8);
+            var syId = window.location.href.match(/syId=.([^&]*)/)[0].substr(5);
+            if(userInfo){
+                userInfo = userInfo.split(",");
+                $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                    if(re.code == '0001000'){
+                        var myorderinfo = new OrderInfoLife({
+                            status:status,
+                            orderId:orderId,
+                            token:userInfo[0],
+                            userId:userInfo[1],
+                            syId:syId,
+                            share:true
+                        });
+                        myorderinfo.init();
+                    }else{
+                        window.location.href = "/view/user/login.html";
+                    }
+                },'json');
+            }else{
+                window.location.href = "/view/user/login.html";
+            }
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            var myorderinfo = new OrderInfoLife({
+                status:json.status,
+                orderId:json.orderId,
+                token:json.token,
+                syId:json.syId,
+                userId:json.userId
+            });
+            myorderinfo.init();
+        }
+
+    </script>
+    
+</body>
+</html>

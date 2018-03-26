@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>支付提示</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current">
+            <div class="content text-center pay-inwechat">
+                <img src="../../public/images/public/pay_tip.png">
+                <p>请在右上角选择浏览器打开以完成支付</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="layer-share">请在浏览器中打开链接下载 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+    <script>
+        var order = window.location.href.match(/order=.([^&]*)/);
+
+        if(order&&!isWeiXin()){
+            var html = '<form action="//'+domain.sx+'/insurance/kunlun/Pay/goPay/" name="alipay" method="post" style="display:none;">\
+                <input type="hidden" name="token" value="0">\
+                <input type="hidden" name="order" value="'+order[0].substr(6)+'">\
+                <input type="hidden" name="share" value="1">\
+                <input type="hidden" name="wechat" value="0">\
+            </form>';
+            $("body").html(html);
+            $("form[name='alipay']").submit();
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>常见问题</title>
+</head>
+<body>
+<div class="page page-current">
+    <div class="pro-ulst">
+        <div class="pro-cust" data-id="1">
+            <div class="pro-left">1.“我的客户”是什么？</div>
+            <div class="pro-right"><i class="iconfont icon-arrow-down"></i></div>
+        </div>
+        <div class="explain" data-id="1">
+            <p>“我的客户”是由“我”发展而来的保满意用户，归属在“我”的名下。按照是否已注册保满意会员，可分为“注册客户”和“微信授权客户”。</p>
+            <p>（1）“注册客户”是“我”的永久下级用户，“注册客户”可以依次扩展下级用户，最多可以扩展4级，且每级在保满意中购买保险时，我都能获取佣金奖励。</p>
+            <p>（2）“微信授权客户”是通过点击我分享在微信中的保满意产品、资讯以及其他页面，而归属于“我”名下的用户。这些用户在保满意微信服务号中自己购买保险时，可以转化成“我”的“注册客户”，并且“我”可以获得佣金奖励。但这些关系是临时的，“我”可以通过“邀请好友”的方式，把别人的“微信授权客户”转变为“我”的“注册客户”。</p>
+        </div>
+
+        <div class="pro-cust" data-id="2">
+            <div class="pro-left">2.发展“我的客户”有什么好处？</div>
+            <div class="pro-right"><i class="iconfont icon-arrow-down"></i></div>
+        </div>
+        <div class="explain" data-id="2">
+           <p>“我的客户”在保满意中购买保险，“我”可以获得佣金奖励。</p>
+            <p>“我”的“注册客户”购买保险，“我”将获得1%的佣金奖励。</p>
+            <p>例如：王经理的朋友圈有260个好友，5%的好友可被发展为“我的客户”，即13人。这13人每人又能发展13人，一共四级，则王经理名下一共有13×13×13×13=28561人“注册客户”，如果这些客户每年从保满意中购买一次车险（按3500元），王经理获得保费返佣1%，年总收入为28561×35=100万元。</p>
+        </div>
+
+        <div class="pro-cust" data-id="3">
+            <div class="pro-left">3.如何发展“我的客户”？</div>
+            <div class="pro-right"><i class="iconfont icon-arrow-down"></i></div>
+        </div>
+        <div class="explain" data-id="3">
+            <p>（1）“注册客户”</p>
+            <p>直接邀请：本页中的【直接邀请注册】，邀请好友注册成为保满意会员。你可以把别人的“微信授权客户”邀请成为你的“注册客户”哦～</p>
+            <p>“微信授权客户”自动转化：“我”的“微信授权客户”自己在保满意中购买产品时注册成为保满意会员，或直接在微信服务号中注册成为保满意会员后，即可转化成为“我”的“注册客户”建立永久关系。</p>
+            <p>（2）“微信授权客户”</p>
+            <p>点击本页中的【分享产品获客】、【分享资讯获客】分享页面内容至微信朋友圈或好友，只要对方点击，即可不知不觉的成为“我”的“微信授权客户”。</p>
+
+        </div>
+
+        <div class="pro-cust" data-id="4">
+            <div class="pro-left">4.如何获得推广佣金？</div>
+            <div class="pro-right"><i class="iconfont icon-arrow-down"></i></div>
+        </div>
+        <div class="explain" data-id="4">
+            <p>除了可以获得下级用户（“注册客户”）买保险时的渠道返佣外，您还可以通过推广保满意中的保险产品获得高额推广佣金。</p>
+            <p>推广产品方法：</p>
+            <p>点击本页下方的【分享产品获客】或者APP首页右上角的【产品获客】，进入产品专区，选择推广费合适的产品，分享至朋友圈或好友，对方一旦购买，您即可获得对应的推广费。</p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+<script>
+    $(function() {
+
+        $(".pro-cust").on("tap",function(){
+           // alert("1222");
+            var id = $(this).data("id");
+            var sel = $(".explain[data-id='"+id+"']");
+            if(sel.hasClass("showbox")){
+                sel.removeClass("showbox");
+                $(".iconfont",this).removeClass("icon-arrow-up");
+            }else{
+                sel.addClass("showbox");
+                $(".iconfont",this).addClass("icon-arrow-up");
+            }
+        })
+    })
+</script>
+</body>
+</html>

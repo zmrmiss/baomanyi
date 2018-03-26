@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+ 	<link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>荣誉详情</title>
+</head>
+<body class="bodyColor-White">
+    <div class="honour-page"></div>
+    <div class="share-bar">
+        <img src="../../public/images/public/down_logo.png" class="share-logo">
+        <div class="share-word">
+            <h3>保满意APP</h3>
+            <p>买车险就用保满意</p>
+        </div>
+        <div class="share-control">
+            <a href="javascript:;" class="rightnow-open">立即打开</a>
+            <img src="../../public/images/public/close.png" class="share-close"> 
+        </div>
+    </div>
+    <div class="layer-share">请在浏览器中打开链接下载 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/app.js"></script>
+    <script>
+        var url = window.location.href.match(/type=.([^&]*)/);
+        var ag;
+
+        if(url&&url[0].substr(5)==1){
+            var id = window.location.href.match(/id=.([^&]*)/)[0].substr(3);
+            var userId = window.location.href.match(/userId=.([^&]*)/)[0].substr(7);
+            var mtype = window.location.href.match(/mtype=.([^&]*)/)[0].substr(6);
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+            var arry = arry||[];
+            var flag = 0;
+
+            if(code&&mtype=='life'){
+                arry = localStorage.getItem("hkhnplife");
+                if(arry){
+                    var b = arry.split(",");
+                    for(var i=0; i<b.length; i++){
+                        flag = b[i] == id ? 1 : 0 ;
+                    };
+                }
+
+                if(!flag){
+                    var myoc = new ObtainClient({
+                        user_id: userId,
+                        code: code,
+                        share_title: "保满意认证经纪人"+localStorage.getItem("agentName"),
+                        share_id: id,
+                        share_type: -1
+                    });
+                    myoc.init();
+
+                    arry = arry?(arry+","+id):id;
+                    localStorage.setItem("hkhnplife",arry)
+                }
+            }
+
+            if(code&&mtype=="car"){
+                arry = localStorage.getItem("hkhnpcar");
+                if(arry){
+                    var b = arry.split(",");
+                    for(var i=0; i<b.length; i++){
+                        flag = b[i] == id ? 1 : 0 ;
+                    };
+                }
+
+                if(!flag){
+                    var myoc = new ObtainClient({
+                        user_id: userId,
+                        code: code,
+                        share_title: "保满意认证经纪人"+localStorage.getItem("agentName"),
+                        share_id: id,
+                        share_type: -1
+                    });
+                    myoc.init();
+
+                    arry = arry?(arry+","+id):id;
+                    localStorage.setItem("hkhnpcar",arry)
+                }
+            }
+            var a = new Agent({
+                nid: id,
+                type: mtype,
+                share: true
+            });
+            if(mtype=="car"){
+                a.honourCarPage();  
+            }else if(mtype=="life"){
+                a.honourLifePage(); 
+            }
+            $(".share-bar").css("display","block");
+            $(".rightnow-open").on("tap",function(){
+                if(isWeiXin()){
+                    $(".layer-share").css("display","block");
+                }else{
+                    new OpenApp({});
+                }
+                $(".layer-share").on("tap",function(){
+                    $(this).css("display","none");
+                })
+            });
+            $("body").append(CNZZ);
+        }
+        
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            ag = new Agent({
+                nid: json.honorId,
+                type: json.mtype,
+                agent_id: json.id,
+                user_id:json.userId
+            });
+            if(json.mtype=="car"){
+                ag.honourCarPage();  
+            }else if(json.mtype=="life"){
+                ag.honourLifePage(); 
+            }
+        }
+        
+        function acceptShare(){
+            ag.sharehpage();
+        }
+    </script>
+</body>
+</html>

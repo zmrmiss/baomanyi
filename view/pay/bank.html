@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <title>选择支付方式</title>
+</head>
+<body>
+    <div class="page-group">
+        <div class="page page-current">
+            <header class="bar bar-nav head-bar"><a href="bmy://app.page/pageReturn" class="back"><i class="iconfont icon-arrow-left"></i></a>选择支付方式</header>
+            <div class="content">
+                <div class="loading">
+                    <div class="loading-img"></div>
+                    <div class="loadding-word">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+    <script>
+        var url = window.location.href.match(/type=.([^&]*)/);
+
+        if(url&&url[0].substr(5)==1){
+            var orderId = window.location.href.match(/orderId=.([^&]*)/)[0].substr(8);
+            var pay = window.location.href.match(/pay=.([^&]*)/)[0].substr(4);
+            var userInfo = localStorage.getItem("userInfo")?localStorage.getItem("userInfo"):0;
+            $(".back").attr("href","#");
+            if(userInfo){
+                userInfo = userInfo.split(",");
+                $.post('//'+domain.jc+'/user/get_token/check_token',{token:userInfo[0]}, function (re) {
+                    if(re.code == '0001000'){
+                        var myPay = new PayBank({
+                            token:userInfo[0],
+                            order:orderId,
+                            share:true,
+                            pay:pay
+                        })
+                        myPay.init();
+                    }else{
+                        window.location.href = "../user/login.html";
+                    }
+                },'json');
+            }else{
+                window.location.href = "../user/login.html";
+            }
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            var myPay = new PayBank({
+                token:json.token,
+                order:json.orderId,
+                pay:json.pay
+            })
+            myPay.init();
+        }
+    </script>
+</body>
+</html>

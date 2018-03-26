@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../../public/dist/css/head.css">
+    <link rel="stylesheet" href="../../../public/debug/css/swiper.min.css">
+    <title>福利详情</title>
+</head>
+<body style="">
+<div class="page-group">
+    <div class="page page-current">
+        <div class="content">
+            <div class="loading">
+                <div class="loading-img"></div>
+                <div class="loadding-word">加载中...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../../public/dist/js/script/Zepto.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/config.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+<script type="text/javascript" src="../../../public/dist/js/handlebars-v4.0.5.js"></script>
+<script src="../../../public/dist/js/buy.js"></script>
+</body>
+<script>
+    function accept(rs){
+        var json = $.parseJSON(rs);
+        var fuLi={id:null};
+        var url = window.location.search;
+
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                if(strs[i].split("=")[1]=='all'){
+                    fuLi.id=json.fuliId
+                }else {
+                    var fuliNum=strs[i].split("=")[1];
+                    fuLi.id=fuliNum;
+                }
+
+            }
+        }
+        var myHy = new HyMem({
+            token:json.token,
+            userId:json.userId,
+            fuliId:fuLi.id
+        })
+        myHy.init();
+    }
+</script>
+<script id="member" type="text/x-handlebars-template">
+    <div class="mber-wrap">
+        <div style="font-size: 1.6rem;font-weight: bold;line-height: 2.2rem;margin-top: 2.4rem;color: #575757;">{{header}}</div>
+    </div>
+    <!--<div class="mber-pic" id="mber-pic">-->
+        <!--<div class="pic-one"><img src="{{img}}" alt="" style="width: 100%;height:100%;"></div>-->
+    <!--</div>-->
+    <div class="mber-wrap" style="padding-top:1.6rem">
+        <!--<div class="mber-title">活动详情</div>-->
+        <div class="mber-exp" id="fl_exp" style="height:auto;"></div>
+    </div>
+    <div class="mber-wrap" id="mber_exp" style="padding-top: 1.5rem;"></div>
+
+
+    <div class="mber-wrap" style="padding: 0" >
+        <div class="mber_input"><input type="text" placeholder="咨询人姓名" class="inp-top" id="isName"></div>
+        <div class="mber_input"><input type="text" placeholder="咨询人联系号码" id="telephone"></div>
+    </div>
+    <div class="mber-wrap" style="margin: 1.2rem 0">
+        <div class="mber-btn" id="btn">立即推荐</div>
+    </div>
+    <div class="mber-alert" id="go_login" >
+        <div class="ale-tip" style="height:15rem">
+            <div class="aler-title">
+                您暂未登录，登录后推荐的，若符合奖励条件的，则可获得相应奖励
+            </div>
+            <div class="aler-btn">
+                <div style="margin-left: 9%;width: 40%;background-color: #ff6900;color: #ffffff;" id="login_btn">登录后再推荐</div>
+                <div style="color: blue" id="tj_btn">不登录直接推荐</div>
+            </div>
+        </div>
+    </div>
+    <div class="mber-tits" id="mber-show">
+        <div class="mber-smal">
+            <div class="mber-til" style="padding-top: 3rem">提交成功</div>
+            <div class="mber-til" id="mber-titsl"></div>
+            <!--<div class="mber-til" id="mber-titsl">稍后工作人员将联系您推荐的人</div>-->
+            <div class="mber-kil" id="mber-clo">知道了</div>
+        </div>
+    </div>
+</script>
+
+</html>

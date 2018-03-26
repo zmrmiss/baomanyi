@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/public/dist/css/head.css">
+    <title>四代奖励说明</title>
+</head>
+<body class="bodyColor-White">
+    <div class="explain-item-1">
+        <img src="/public/images/public/default_avator_img.png" class="avator-img">
+        <img src="/public/images/share/yourself.png" class="tip-yourself">
+    </div>
+    <div class="explain-item-2">
+        <img src="/public/images/share/jlgz.png">
+    </div>
+    <div class="explain-item-3">
+        <h2>四代奖励说明</h2>
+        <p>您分享后A注册，A分享后B注册，同理到D注册，则ABCD均视为您发展而来的会员，A为一级代言人，D为四级代言人，ABCD在平台每出一单，您都可获得订单对应比例的佣金奖励，永久有效！</p>
+        <h2>奖励计算实例说明</h2>
+        <p>假如您的朋友圈里有200人，按10%的注册转化率，您发展的一级代言人为：200*10%=20人，同理，一级代言人发展带来的二级代言人为：20*20=400人。以此类推，您的三级代言人数为8000，四级代言人为160000人，您的一至四级代言人总数为：20+400+8000+160000=168420人！</p>
+        <p>这些会员如果一年内有20%在保满意中购买车险，车险价格按3000元/人/年、佣金比按1%计算，则您每年共可获得奖励：168420*20%*3000*1%=1010520元！这还只是车险单项、未算寿险等其他险种...</p>
+    </div>
+
+    <script type="text/javascript" src="/public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="/public/dist/js/config.js"></script>
+    <script type="text/javascript" src="/public/dist/js/app.js"></script>
+    <script>
+        function accept(rs) {
+            var json = $.parseJSON(rs);
+            var eUid = json.encryptUid;
+            var vtoken = json.token;
+            $.post('//'+domain.jc+'/user/setting/geth5view',{token:vtoken,referrer_id:eUid}, function (re) {
+                if(re.code=='0001000'){
+                    $(".avator-img").attr("src",re.data.avator);
+                }
+            },'json');
+        }
+    </script>
+</body>
+</html>

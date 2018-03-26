@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <!--<link rel="stylesheet" type="text/css" href="../../public/debug/css/iconfont.css">-->
+    <title></title>
+    <style>
+        .iconfont{
+            font-size: 14px;
+        }
+        .iconfont:before{
+            font-size: 1.4rem;
+            color: #ff6900;
+            padding-right: .2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-group">
+    <div class="page page-current">
+        <div class="content">
+            <div class="loading">
+                <div class="loading-img"></div>
+                <div class="loadding-word">加载中...</div>
+            </div>
+            <div id="zpcontenr">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/buy.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/handlebars.runtime-v4.0.5.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/handlebars-v4.0.5.js"></script>
+    <script>
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            var myZP = new ZpXqy({
+                token:json.token,
+                position_id:json.position_id,
+                distance:json.distance
+            })
+            myZP.init();
+        }
+    </script>
+    <script id="zptpl" type="text/x-handlebars-template">
+
+        <div class="card-block product-wrap" style="margin-top: .8rem">
+            <div class="flex-wrap is-spread mt-ins">
+                <span class="price-tips color-FF6900" style="width: 73%;line-height: 2rem;">{{position.title}}</span>
+                <span class="color-FF6900">{{position.salary}}</span>
+            </div>
+            <div class="flex-wrap is-spread" style="line-height: 1.8rem; font-size: 120%">
+                <span class="price-tips color-808080">{{company.shortname}}</span>
+            </div>
+            <div class="is-spread color-808080" id="icons" style="padding-left:1.6rem;padding-right: 12%;line-height: 1.8rem;padding-top:0.6rem;padding-bottom:0.6rem">
+                <span class="iconfont icon-location">{{position.city}} {{position.county}}</span>
+                <span class="iconfont icon-qiuzhi_jingyan">{{position.experience}}</span>
+                <span class="iconfont icon-qiuzhi_xueli">{{position.education}}</span>
+                <span class="iconfont icon-qiuzhi_leixing">{{position.nature}}</span>
+            </div>
+            <div class="flex-wrap is-spread " style="line-height:2rem;" id="reward">
+                <div class="color-808080">悬赏：<span class="color-FF6900">{{position.reward}}</span></div>
+
+            </div>
+            <div class="flex-wrap is-spread " style="height:2.6rem;line-height: 2.6rem;padding-bottom:0.8rem;">
+                <div class="color-808080">已申请：<span class="surmun">{{position.apply_number}}</span>人</div>
+            </div>
+        </div>
+        <div class="card-block product-wrap" >
+            <div class="flex-wrap is-spread insure-title-border" style="font-size: 120%">
+                <span class="price-tips">职位描述</span>
+            </div>
+            <div class="is-spread color-808080" id="description" style="line-height: 2rem;padding:1rem 1.6rem" >
+            </div>
+        </div>
+        <div class="card-block mation-wrap" style="margin-bottom:6rem">
+            <div class="mation-t mt-lg">
+                <div class="mation"><img src="{{company.logo}}" alt="" style="height:100%" id="bjl"></div>
+                <div class="flex-wrap mation-title" style="color: #575757">{{company.fullname}}</div>
+                <div class=" mation-title mt-num">{{company.headcount}}</div>
+                <div class="mation-radio"><i class="iconfont icon-arrow-right"></i></div>
+            </div>
+            <div class="mation-b">
+                <div class="iconfont icon-location fontsma"></div>
+                <div class="flex-wrap is-spread color-808080" style="line-height: 2rem;padding:0 4.5rem 0 0.5rem">
+                    <span  class="fo-location">{{company.address}}</span>
+                </div>
+                <div class="formdis">
+                    <span class="distance" id="distance"></span>
+                </div>
+            </div>
+        </div>
+        <div class="Application">
+            <div class="cat-btn"><a href="javascript:void (0)">申请职位</a></div>
+        </div>
+    </script>
+</body>
+</html>

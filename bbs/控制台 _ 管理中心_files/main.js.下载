@@ -1,0 +1,1911 @@
+/***
+Metronic AngularJS App Main Script
+***/
+
+/* Metronic App */
+var App = angular.module("App", [
+    "ui.router",
+    "ui.bootstrap",
+    "oc.lazyLoad",
+    "ngSanitize",
+    'tm.pagination',
+    'ui.select',
+    'angularFileUpload',
+    'daterangepicker',
+    '720kb.tooltips',
+    'datePicker'
+]);
+
+/* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
+App.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
+    $ocLazyLoadProvider.config({
+        // global configs go here
+    });
+}]);
+
+//AngularJS v1.3.x workaround for old style controller declarition in HTML
+App.config(['$controllerProvider', function($controllerProvider) {
+  // this option might be handy for migrating old apps, but please don't use it
+  // in new ones!
+  $controllerProvider.allowGlobals();
+}]);
+
+/********************************************
+ END: BREAKING CHANGE in AngularJS v1.3.x:
+*********************************************/
+
+/* Setup global settings */
+App.factory('settings', ['$rootScope', function($rootScope) {
+    // supported languages
+    var settings = {
+        layout: {
+            pageSidebarClosed: false, // sidebar menu state
+            pageContentWhite: true, // set page content layout
+            pageBodySolid: false, // solid body color state
+            pageAutoScrollOnLoad: 1000 // auto scroll to top on page load
+        },
+        assetsPath: '/web/assets',
+        globalPath: '/web/assets/global',
+        layoutPath: '/web/assets/layouts/layout'
+    };
+
+    $rootScope.settings = settings;
+
+    return settings;
+}]);
+
+/* Setup App Main Controller */
+App.controller('AppCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+    $scope.$on('$viewContentLoaded', function() {
+
+        //App.initComponents(); // init core components
+        //Layout.init(); //  Init entire layout(header, footer, sidebar, etc) on page load if the partials included in server side instead of loading with ng-include directive
+    });
+}]);
+
+/***
+Layout Partials.
+By default the partials are loaded through AngularJS ng-include directive. In case they loaded in server side(e.g: PHP include function) then below partial
+initialization can be disabled and Layout.init() should be called on page load complete as explained above.
+***/
+
+/* Setup Layout Part - Header */
+App.controller('HeaderCtrl', ['$rootScope', '$scope', '$ajax','$http', function($rootScope, $scope, $ajax,$http) {
+    $scope.$on('$includeContentLoaded', function() {
+
+    });
+
+    $rootScope.news = [];
+    $rootScope.newsCount = 0;
+    $rootScope.load = function () {
+        $ajax.post('system/customer/message', {
+            pageSize: 7,
+            currentPage: 1,
+            flag: 2
+        }, function (result) {
+            $rootScope.news = result.result;
+            $rootScope.newsCount = result.total;
+        })
+    };
+    $rootScope.load();
+
+
+    $rootScope.statusData = [{name:"--审核状态--",applyStatus:""},
+        {name:"待审核",applyStatus:1},
+        {name:"审核通过",applyStatus:2},
+        {name:"审核驳回",applyStatus:3}];
+
+    $rootScope.validateFlagData = [{name:"--审核状态--",validateFlag:""},
+        {name:"待审核",validateFlag:3},
+        {name:"审核通过",validateFlag:4},
+        {name:"审核驳回",validateFlag:5}];
+
+    $rootScope._deptOriginalData = null;
+    $rootScope.getContactGroup = function (callback) {
+        if($rootScope._deptOriginalData != null){
+            callback && callback($rootScope._deptOriginalData);
+            return;
+        }
+        $http({
+            url: "customer/contact/groups",
+            type: "POST",
+        }).then(function (result) {
+            if (result.status == 200 && result.data.code == 200) {
+                $rootScope._deptOriginalData = result.data.data;
+                $rootScope._deptOriginalData.forEach(function (a,i) {
+                    delete a['ctime'];
+                    delete a['ltime'];
+                });
+                callback && callback($rootScope._deptOriginalData);
+            }
+        });
+    };
+    $rootScope.getContactGroup();
+    $rootScope.getGroupName = function (groupId) {
+        if(!groupId){
+            return "未分组";
+        }
+        var nameList = [];
+        $rootScope._getGroupName(groupId,nameList);
+        return nameList.join(">");
+    };
+    $rootScope._getGroupName = function (groupId,nameList) {
+        $rootScope.getContactGroup(function () {
+            for(var i=0;i<$scope._deptOriginalData.length;i++){
+                if($scope._deptOriginalData[i].id == groupId){
+                    nameList.unshift($scope._deptOriginalData[i].name);
+                    if($scope._deptOriginalData[i].parentId != 0){
+                        $scope._getGroupName($scope._deptOriginalData[i].parentId,nameList)
+                    }
+                }
+            }
+        });
+    };
+    //=================加载签名=====================
+    $rootScope._signs = null;
+    $rootScope.loadSign = function (callback) {
+        if($rootScope._signs != null){
+            callback && callback($rootScope._signs);
+            return;
+        }
+        $ajax.post('plat/signs', {}, function (result) {
+            $rootScope._signs = result;
+            callback && callback($rootScope._signs);
+        })
+    };
+
+    //=================获取客服信息=====================
+    $rootScope.customServiceInfo = null;
+    $rootScope.getCustomServiceInfo = function (callback) {
+        $ajax.post('customer/customService/info', {}, function (result) {
+            $rootScope.customServiceInfo = result;
+        })
+    };
+    $rootScope.getCustomServiceInfo();
+}]);
+
+///* Setup Layout Part - Sidebar */
+App.controller('SideBarCtrl', ['$state', '$scope', function($state, $scope) {
+    $scope.$on('$includeContentLoaded', function() {
+        Layout.initSidebar($state); // init sidebar
+    });
+}]);
+
+/* Setup Layout Part - Quick Sidebar */
+//App.controller('QuickSidebarController', ['$scope', function($scope) {
+//    $scope.$on('$includeContentLoaded', function() {
+//       setTimeout(function(){
+//            QuickSidebar.init(); // init quick sidebar
+//        }, 2000)
+//    });
+//}]);
+
+/* Setup Layout Part - Theme Panel */
+//App.controller('ThemePanelController', ['$scope', function($scope) {
+//    $scope.$on('$includeContentLoaded', function() {
+//        Demo.init(); // init theme panel
+//    });
+//}]);
+
+/* Setup Layout Part - Footer */
+//App.controller('FooterController', ['$scope', function($scope) {
+//    $scope.$on('$includeContentLoaded', function() {
+//        Layout.initFooter(); // init footer
+//    });
+//}]);
+
+/* Setup Rounting For All Pages */
+App.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+    // Redirect any unmatched url
+    $urlRouterProvider.otherwise("/desktop");
+
+    $stateProvider
+
+        // Dashboard
+        .state('desktop', {
+            url: "/desktop",
+            templateUrl: "show?page=/desktop",
+            data: {pageTitle: '控制台'},
+            controller: "DesktopCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/desktop.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // // 短信测试
+        // .state('test', {
+        //     url: "/message/test",
+        //     templateUrl: "show?page=/message/message-test",
+        //     data: {pageTitle: '短信测试'},
+        //     controller: "MessageTestCtrl",
+        //     resolve: {
+        //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+        //             return $ocLazyLoad.load({
+        //                 name: 'App',
+        //                 insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+        //                 files: [
+        //                     '../assets/pages/controllers/message/message-test.js'
+        //                 ]
+        //             });
+        //         }]
+        //     }
+        // })
+        // 接口短信
+        .state('message', {
+            url: "/api",
+            templateUrl: "show?page=/message/message-tab",
+            data: {pageTitle: '接口短信'},
+            controller: "MessageSettingCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 接口短信 概况
+        .state('message.report', {
+            url: "/report",
+            templateUrl: "show?page=/message/message-api",
+            data: {pageTitle: '接口短信'},
+            controller: "MessageApiCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-api.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 签名
+        .state('message.sign', {
+            url: "/sign",
+            templateUrl: "show?page=/message/sign-list",
+            data: {pageTitle: '接口短信'},
+            controller: "MessageSignCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/sign-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 模板
+        .state('message.template', {
+            url: "/template",
+            templateUrl: "show?page=/message/template-list",
+            data: {pageTitle: '接口短信'},
+            controller: "MessageTemplateCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/template-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('message.batch', {
+            url: "/batch",
+            templateUrl: "show?page=/message/message-batch-list",
+            data: {pageTitle: '发送批次'},
+            controller: "MessageBatchCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-batch-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 发送记录
+        .state('message.record', {
+            url: "/record",
+            templateUrl: "show?page=/message/message-record-list",
+            data: {pageTitle: '发送记录'},
+            params: {
+                batchId: null,
+                date: null
+            },
+            controller: "MessageRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 账单明细
+        .state('message.bills', {
+            url: "/bills",
+            templateUrl: "show?page=/message/message-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "MessageBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 发送统计
+        .state('message.sendReport', {
+            url: "/send/report",
+            templateUrl: "show?page=/message/message-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "MessageSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 回复记录
+        .state('message.reply', {
+            url: "/reply",
+            templateUrl: "show?page=/message/message-record-reply-list",
+            data: {pageTitle: '回复记录'},
+            controller: "MessageRecordReplyCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-record-reply-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //接口短信 黑名单
+        .state('message.black', {
+            url: "/black",
+            templateUrl: "show?page=/message/message-black-list",
+            data: {pageTitle: '黑名单'},
+            controller: "MessageApiBlackCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/message/message-black-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信
+        .state('plat', {
+            url: "/plat",
+            templateUrl: "show?page=/plat/plat-tab",
+            data: {pageTitle: '群发短信'},
+            controller: "MessagePlatCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 概况
+        .state('plat.report', {
+            url: "/report",
+            templateUrl: "show?page=/plat/plat-report",
+            data: {pageTitle: '概况'},
+            controller: "MessagePlatReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 发送
+        .state('plat.send', {
+            url: "/send",
+            templateUrl: "show?page=/plat/plat-send",
+            data: {pageTitle: '短信发送'},
+            controller: "MessagePlatSendCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                            '../assets/pages/controllers/plat/plat-send.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 签名
+        .state('plat.sign', {
+            url: "/sign",
+            templateUrl: "show?page=/plat/plat-sign-list",
+            data: {pageTitle: '签名报备'},
+            controller: "MessagePlatSignCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-sign-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 模板
+        .state('plat.template', {
+            url: "/template",
+            templateUrl: "show?page=/plat/plat-template-list",
+            data: {pageTitle: '模板报备'},
+            controller: "MessagePlatTemplateCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-template-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 发送批次
+        .state('plat.batch', {
+            url: "/batch",
+            templateUrl: "show?page=/plat/plat-batch-list",
+            data: {pageTitle: '发送批次'},
+            controller: "MessagePlatBatchCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-batch-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 发送记录
+        .state('plat.record', {
+            url: "/record",
+            templateUrl: "show?page=/plat/plat-record-list",
+            data: {pageTitle: '发送记录'},
+            params: {
+                batchId: null,
+                date: null
+            },
+            controller: "MessagePlatRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 回复记录
+        .state('plat.reply', {
+            url: "/reply",
+            templateUrl: "show?page=/plat/plat-record-reply-list",
+            data: {pageTitle: '回复记录'},
+            controller: "MessagePlatRecordReplyCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-record-reply-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 黑名单
+        .state('plat.black', {
+            url: "/black",
+            templateUrl: "show?page=/plat/plat-black-list",
+            data: {pageTitle: '黑名单'},
+            controller: "MessagePlatBlackCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-black-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 群发短信 白名单
+        .state('plat.white', {
+            url: "/white",
+            templateUrl: "show?page=/plat/plat-white-list",
+            data: {pageTitle: '白名单'},
+            controller: "MessagePlatWhiteCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-white-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //群发短信 账单明细
+        .state('plat.bills', {
+            url: "/bills",
+            templateUrl: "show?page=/plat/plat-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "PlatBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //群发短信 发送统计
+        .state('plat.sendReport', {
+            url: "/send/report",
+            templateUrl: "show?page=/plat/plat-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "PlatSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/plat/plat-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 语音验证码
+        .state('voice', {
+            url: "/voice",
+            templateUrl: "show?page=/voice/voice-tab",
+            data: {pageTitle: '语音验证码'},
+            controller: "VoiceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/voice/voice-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 语音验证码 概况
+        // .state('voice.report', {
+        //     url: "/report",
+        //     templateUrl: "show?page=/voice/voice-report",
+        //     data: {pageTitle: '概况'},
+        //     controller: "VoiceReportCtrl",
+        //     resolve: {
+        //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+        //             return $ocLazyLoad.load({
+        //                 name: 'App',
+        //                 insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+        //                 files: [
+        //                     'assets/pages/controllers/voice/voice-report.js'
+        //                 ]
+        //             });
+        //         }]
+        //     }
+        // })
+        // 语音验证码 测试
+        .state('voice.test', {
+            url: "/test",
+            templateUrl: "show?page=/voice/voice-test",
+            data: {pageTitle: '语音测试'},
+            controller: "VoiceTestCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/voice/voice-test.js'
+                        ]
+                    });
+                }]
+            }
+        })// 语音验证码 发送记录
+        .state('voice.record', {
+            url: "/record",
+            templateUrl: "show?page=/voice/voice-record-list",
+            data: {pageTitle: '发送记录'},
+            controller: "VoiceRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/voice/voice-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //语音短信 账单明细
+        .state('voice.bills', {
+            url: "/bills",
+            templateUrl: "show?page=/voice/voice-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "VoiceBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/voice/voice-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //语音短信 发送统计
+        .state('voice.sendReport', {
+            url: "/send/report",
+            templateUrl: "show?page=/voice/voice-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "VoiceSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/voice/voice-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // 国际语音验证码
+        .state('intlvoice', {
+            url: "/intlvoice",
+            templateUrl: "show?page=/intlvoice/voice-tab",
+            data: {pageTitle: '语音验证码'},
+            controller: "intlVoiceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intlvoice/voice-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 语音验证码 概况
+        // .state('voice.report', {
+        //     url: "/report",
+        //     templateUrl: "show?page=/voice/voice-report",
+        //     data: {pageTitle: '概况'},
+        //     controller: "VoiceReportCtrl",
+        //     resolve: {
+        //         deps: ['$ocLazyLoad', function($ocLazyLoad) {
+        //             return $ocLazyLoad.load({
+        //                 name: 'App',
+        //                 insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+        //                 files: [
+        //                     'assets/pages/controllers/voice/voice-report.js'
+        //                 ]
+        //             });
+        //         }]
+        //     }
+        // })
+        // 语音验证码 测试
+        .state('intlvoice.test', {
+            url: "/intltest",
+            templateUrl: "show?page=/intlvoice/voice-test",
+            data: {pageTitle: '语音测试'},
+            controller: "intlVoiceTestCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intlvoice/voice-test.js'
+                        ]
+                    });
+                }]
+            }
+        })// 语音验证码 发送记录
+        .state('intlvoice.record', {
+            url: "/intlrecord",
+            templateUrl: "show?page=/intlvoice/voice-record-list",
+            data: {pageTitle: '发送记录'},
+            controller: "intlVoiceRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intlvoice/voice-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //国际语音短信 账单明细
+        .state('intlvoice.bills', {
+            url: "/intlbills",
+            templateUrl: "show?page=/intlvoice/voice-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "intlVoiceBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intlvoice/voice-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //国际语音短信 发送统计
+        .state('intlvoice.sendReport', {
+            url: "/intlsend/report",
+            templateUrl: "show?page=/intlvoice/voice-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "intlVoiceSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intlvoice/voice-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际语音验证码 价格
+        .state('intlvoice.price', {
+            url: "/price",
+            templateUrl: "show?page=/intlvoice/voice-price",
+            data: {pageTitle: '国际语音验证码价格'},
+            controller: "IntlVoicePriceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intlvoice/voice-price.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // 语音通知
+        .state('noticevoice', {
+            url: "/noticevoice",
+            templateUrl: "show?page=/noticevoice/voice-tab",
+            data: {pageTitle: '语音短信'},
+            controller: "noticeVoiceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 发送
+        .state('noticevoice.send', {
+            url: "/noticevoicesend",
+            templateUrl: "show?page=/noticevoice/voice-send",
+            data: {pageTitle: '短信发送'},
+            controller: "noticeVoiceSendCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                            '../assets/pages/controllers/noticevoice/voice-send.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 语音短信 测试
+        .state('noticevoice.test', {
+            url: "/noticetest",
+            templateUrl: "show?page=/noticevoice/voice-test",
+            data: {pageTitle: '语音测试'},
+            controller: "noticeVoiceTestCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-test.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 语音短信 发送记录
+        .state('noticevoice.record', {
+            url: "/noticerecord",
+            templateUrl: "show?page=/noticevoice/voice-record-list",
+            data: {pageTitle: '发送记录'},
+            params: {
+                batchId: null,
+                date: null
+            },
+            controller: "noticeVoiceRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //语音短信 账单明细
+        .state('noticevoice.bills', {
+            url: "/noticebills",
+            templateUrl: "show?page=/noticevoice/voice-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "noticeVoiceBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //语音短信 发送统计
+        .state('noticevoice.sendReport', {
+            url: "/noticesend/report",
+            templateUrl: "show?page=/noticevoice/voice-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "noticeVoiceSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 模板
+        .state('noticevoice.template', {
+            url: "/noticevoicetemplate",
+            templateUrl: "show?page=/noticevoice/voice-template-list",
+            data: {pageTitle: '模板报备'},
+            controller: "noticevoiceTemplateCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-template-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('noticevoice.batch', {
+            url: "/noticevoicebatch",
+            templateUrl: "show?page=/noticevoice/voice-batch-list",
+            data: {pageTitle: '发送记录'},
+            controller: "MessageNoticevoiceBatchCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-batch-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 语音通知 价格
+        .state('noticevoice.price', {
+            url: "/price",
+            templateUrl: "show?page=/noticevoice/voice-price",
+            data: {pageTitle: '语音通知价格'},
+            controller: "NoticeVoicePriceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/noticevoice/voice-price.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // 国际验证码
+        .state('intl', {
+            url: "/intl",
+            templateUrl: "show?page=/intl/intl-tab",
+            data: {pageTitle: '国际验证码'},
+            controller: "IntlCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 概况
+        .state('intl.report', {
+            url: "/report",
+            templateUrl: "show?page=/intl/intl-report",
+            data: {pageTitle: '概况'},
+            controller: "IntlReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 发送
+        .state('intl.send', {
+            url: "/send",
+            templateUrl: "show?page=/intl/intl-send",
+            data: {pageTitle: '短信发送'},
+            controller: "IntlSendCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                            '../assets/pages/controllers/intl/intl-send.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 签名
+        .state('intl.sign', {
+            url: "/sign",
+            templateUrl: "show?page=/intl/intl-sign-list",
+            data: {pageTitle: '签名报备'},
+            controller: "IntlSignCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-sign-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 模板
+        .state('intl.template', {
+            url: "/template",
+            templateUrl: "show?page=/intl/intl-template-list",
+            data: {pageTitle: '模板报备'},
+            controller: "IntlTemplateCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-template-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('intl.batch', {
+            url: "/batch",
+            templateUrl: "show?page=/intl/intl-batch-list",
+            data: {pageTitle: '发送记录'},
+            controller: "MessageIntlBatchCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-batch-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 发送记录
+        .state('intl.record', {
+            url: "/record",
+            templateUrl: "show?page=/intl/intl-record-list",
+            data: {pageTitle: '发送记录'},
+            params: {
+                batchId: null,
+                date: null
+            },
+            controller: "IntlRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //国际短信 账单明细
+        .state('intl.bills', {
+            url: "/bills",
+            templateUrl: "show?page=/intl/intl-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "IntlBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //国际短信 发送统计
+        .state('intl.sendReport', {
+            url: "/send/report",
+            templateUrl: "show?page=/intl/intl-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "IntlSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 价格
+        .state('intl.price', {
+            url: "/price",
+            templateUrl: "show?page=/intl/intl-price",
+            data: {pageTitle: '国际价格'},
+            controller: "IntlPriceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/intl/intl-price.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 私密通话
+        .state('secrettalk', {
+            url: "/secrettalk",
+            templateUrl: "show?page=/secrettalk/secrettalk-tab",
+            data: {pageTitle: '私密通话'},
+            controller: "SecretTalkCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/secrettalk/secrettalk-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 私密通话 概况
+        .state('secrettalk.report', {
+            url: "/report",
+            templateUrl: "show?page=/secrettalk/secrettalk-report",
+            data: {pageTitle: '概况'},
+            controller: "SecretTalkReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/secrettalk/secrettalk-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 私密通话 发送记录
+        .state('secrettalk.record', {
+            url: "/record",
+            templateUrl: "show?page=/secrettalk/secrettalk-record-list",
+            data: {pageTitle: '发送记录'},
+            params: {
+                batchId: null,
+                date: null
+            },
+            controller: "SecretTalkRecordCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/secrettalk/secrettalk-record-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //国际短信 账单明细
+        .state('secrettalk.bills', {
+            url: "/bills",
+            templateUrl: "show?page=/secrettalk/secrettalk-bills-list",
+            data: {pageTitle: '账单明细'},
+            controller: "SecretTalkBillsCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/secrettalk/secrettalk-bills-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //国际短信 发送统计
+        .state('secrettalk.sendReport', {
+            url: "/send/report",
+            templateUrl: "show?page=/secrettalk/secrettalk-send-report",
+            data: {pageTitle: '发送统计'},
+            controller: "SecretTalkSendReportCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/secrettalk/secrettalk-send-report.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 国际验证码 价格
+        .state('secrettalk.price', {
+            url: "/price",
+            templateUrl: "show?page=/secrettalk/secrettalk-price",
+            data: {pageTitle: '价格'},
+            controller: "SecretTalkPriceCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/secrettalk/secrettalk-price.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 通讯录
+        .state('contact', {
+            url: "/contact/group",
+            templateUrl: "show?page=/contact/contact-group-list",
+            data: {pageTitle: '通讯组'},
+            controller: "ContactGroupCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                            '../assets/pages/controllers/contact/contact-group-list.js',
+                            '../assets/pages/controllers/contact/treeutil.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 开发者工具
+        .state('develop', {
+            url: "/develop",
+            templateUrl: 'show?page=/develop/develop-sdk-list',
+            abstract: true
+        })
+        // SDK下载
+        .state('develop.sdk', {
+            url: "/sdk",
+            templateUrl: "show?page=/develop/develop-sdk-list",
+            data: {pageTitle: 'SDK下载'},
+            controller: "DevelopSdkCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/develop/develop-sdk-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 充值
+        .state('payment', {
+            url: "/payment",
+            templateUrl: "show?page=/balance/payment-tab",
+            data: {pageTitle: '充值'},
+            controller: "PaymentCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/payment-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 充值 账户充值
+        .state('payment.account', {
+            url: "/account",
+            templateUrl: "show?page=/balance/payment-account",
+            data: {pageTitle: '账户充值'},
+            controller: "PaymentAccountCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/payment-account.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 充值 线下充值
+        .state('payment.offline', {
+            url: "/offline",
+            templateUrl: "show?page=/balance/payment-offline",
+            data: {pageTitle: '线下充值'},
+            controller: "PaymentOfflineCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/payment-offline.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 充值 服务充值
+        .state('payment.product', {
+            url: "/product",
+            templateUrl: "show?page=/balance/payment-product",
+            data: {pageTitle: '服务充值'},
+            controller: "PaymentProductCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/payment-product.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 账单
+        .state('orders', {
+            url: "/orders",
+            templateUrl: "show?page=/balance/orders-tab",
+            data: {pageTitle: '账单'},
+            controller: "OrderTabCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/orders-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('orders.all', {
+            url: "/all",
+            templateUrl: "show?page=/balance/orders-all-list",
+            data: {pageTitle: '全部账单'},
+            controller: "OrderAllCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/orders-all-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('orders.paid', {
+            url: "/paid",
+            templateUrl: "show?page=/balance/orders-paid-list",
+            data: {pageTitle: '已支付账单'},
+            controller: "OrderPaidCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/orders-paid-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('orders.nopaid', {
+            url: "/nopaid",
+            templateUrl: "show?page=/balance/orders-nopaid-list",
+            data: {pageTitle: '未支付账单'},
+            controller: "OrderNoPaidCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/orders-nopaid-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 发票
+        .state('invoice', {
+            url: "/invoice",
+            templateUrl: "show?page=/balance/invoice-tab",
+            data: {pageTitle: '发票'},
+            controller: "InvoiceTabCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/invoice-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('invoice.all', {
+            url: "/invoices",
+            templateUrl: "show?page=/balance/invoice-all-list",
+            data: {pageTitle: '全部发票'},
+            controller: "InvoiceAllCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/invoice-all-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('invoice.invoiced', {
+            url: "/invoiced",
+            templateUrl: "show?page=/balance/invoice-invoiced-list",
+            data: {pageTitle: '已开发票'},
+            controller: "InvoicedCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/invoice-invoiced-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('invoice.unbilled', {
+            url: "/unbilled",
+            templateUrl: "show?page=/balance/invoice-unbilled-list",
+            data: {pageTitle: '未开发票'},
+            controller: "InvoiceUnbilledCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/balance/invoice-unbilled-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置
+        .state('system', {
+            url: "/system",
+            templateUrl: "show?page=/system/system-tab",
+            data: {pageTitle: '系统设置'},
+            controller: "SystemTabCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/system-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置 IP白名单
+        .state('system.ip', {
+            url: "/whiteip",
+            templateUrl: "show?page=/system/system-ip-setting",
+            data: {pageTitle: 'IP白名单'},
+            controller: "SystemApiCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/system-ip-setting.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置 数据推送
+        .state('system.push', {
+            url: "/push",
+            templateUrl: "show?page=/system/system-push-setting",
+            data: {pageTitle: '数据推送'},
+            controller: "CustomerPushCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/system-push-setting.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置 通知设置
+        .state('system.notice', {
+            url: "/notice",
+            templateUrl: "show?page=/system/system-notice-setting",
+            data: {pageTitle: '通知设置'},
+            controller: "SystemNoticeCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/system-notice-setting.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 账户设置
+        .state('account', {
+            url: "/account",
+            templateUrl: "show?page=/account/account-tab",
+            data: {pageTitle: '账户设置'},
+            controller: "AccountTabCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/account/account-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置 IP白名单
+        .state('account.info', {
+            url: "/info",
+            templateUrl: "show?page=/account/account-info",
+            data: {pageTitle: '基本信息'},
+            controller: "AccountInfoCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/account/account-info.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置
+        .state('account.auth', {
+            url: "/auth",
+            templateUrl: "show?page=/account/account-auth",
+            data: {pageTitle: '认证资料'},
+            controller: "AccountAuthCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
+                            '../assets/pages/controllers/account/account-auth.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 安全设置
+        .state('account.safe', {
+            url: "/safe",
+            templateUrl: "show?page=/account/account-safe",
+            data: {pageTitle: '安全设置'},
+            controller: "AccountSafeCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/account/account-safe.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统设置 修改密码
+        .state('account.pwd', {
+            url: "/pwd",
+            templateUrl: "show?page=/account/account-pwd",
+            data: {pageTitle: '修改密码'},
+            controller: "AccountPwdCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/account/account-pwd.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 账户设置
+        .state('customer', {
+            url: "/customer",
+            templateUrl: "show?page=/system/customer-tab",
+            data: {pageTitle: '消息日志'},
+            controller: "CustomerTabCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/customer-tab.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 系统消息
+        .state('customer.news', {
+            url: "/customer/news",
+            templateUrl: "show?page=/system/customer-message-list",
+            data: {pageTitle: '消息日志'},
+            controller: "CustomerMessageCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/customer-message-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        // 操作日志
+        .state('customer.logs', {
+            url: "/customer/logs",
+            templateUrl: "show?page=/system/customer-log-list",
+            data: {pageTitle: '操作日志'},
+            controller: "CustomerUserLogCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'App',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            '../assets/pages/controllers/system/customer-log-list.js'
+                        ]
+                    });
+                }]
+            }
+        })
+}]);
+
+/* Init global settings and run the app */
+App.run(["$rootScope", "settings", "$state", function($rootScope, settings, $state) {
+    $rootScope.$state = $state; // state to be accessed from view
+    $rootScope.$settings = settings; // state to be accessed from view
+}]);
+
+App.service('$ajax', ['$http', '$window', '$location', function ($http, $window, $location) {
+        var resultInspector = function (result, success, error) {
+            switch (result.code) {
+                case 200:
+                    success && success(result.data);
+                    break;
+                case 401:
+                    var path = window.document.location.pathname;
+                    window.location.replace(path.substring(0,path.substr(1).indexOf('/')+1) + '/login');
+                    break;
+                case 403:
+                case 404:
+                case 500:
+                    //layer.msg(result.codeInfo || '请求失败，请稍后重试!', function(){});
+                    $location.path('/error500');
+                    $location.replace();
+                    break;
+                default:
+                    if (error) {
+                        error(result);
+                    } else {
+                        layer.msg(result.codeInfo || '请求失败，请稍后重试!', {time: 1000, icon:2});
+                    }
+            }
+        };
+        return {
+            get: function (url, params, success, error) {
+                App.startPageLoading({animate: true});
+                $http({
+                    method: 'GET',
+                    url: url,
+                    params: params,
+                    headers: {'X-Requested-With': 'XMLHttpRequest'}
+                }).then(function (response) {
+                    App.stopPageLoading();
+                    var result = response.data;
+                    resultInspector(result, success, error);
+                }, function (response) {
+                    App.stopPageLoading();
+                    layer.msg('请求失败，请稍后重试!', {time: 1000, icon: 2}, function(){});
+                });
+            },
+            post: function (url, data, success, error) {
+                App.startPageLoading({animate: true});
+                $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    headers: {'X-Requested-With': 'XMLHttpRequest'}
+                }).then(function (response) {
+                    App.stopPageLoading();
+                    var result = response.data;
+                    resultInspector(result, success, error);
+                }, function (response) {
+                    App.stopPageLoading();
+                    layer.msg('请求失败，请稍后重试!', {time: 1000, icon: 2}, function(){});
+                });
+            }
+        };
+    }]
+);
+//字典表服务
+// App.service('$dict', ['$ajax', '$window', function ($ajax, $window) {
+//     var dict = $window.localStorage.getItem('dict') ? JSON.parse($window.localStorage.getItem('dict')) : {};
+//     $ajax.get('dict/list', {}, function (result) {
+//         dict = result;
+//         $window.localStorage.setItem("dict", JSON.stringify(dict));
+//     });
+//     return {
+//         dict: dict,
+//         getDict: function() {
+//             return dict || [];
+//         },
+//         getApiCategories: function () {
+//             return dict.apiCategories || [];
+//         }
+//     }
+// }]);
+// App.filter('dict', ['$dict', function ($dict) {
+//     return function (input, which) {
+//         var data = $dict.dict[which];
+//         if (data) {
+//             for (var i = data.length; i--;) {
+//                 if (data[i].id == input) {
+//                     return data[i].name;
+//                 }
+//             }
+//         }
+//         return '';
+//     }
+// }]);
+

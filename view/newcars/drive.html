@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../public/dist/css/head.css">
+    <meta name="format-detection" content="telephone=no" />
+    <title>免费试驾</title>
+</head>
+<body>
+    <div class="newcar-wrap">
+        <div class="banner-drive"></div>
+        <div class="intention-car">
+            <div class="inquiry-title">意向车系</div>
+            <div class="intention-main"></div>
+        </div>
+        <div class="user-profile">
+            <div class="inquiry-title">个人信息</div>
+            <div class="form-group user-name">
+                <label class="control-label">姓名</label>
+                <div class="control-input">
+                    <input class="form-control" id="contact-username" placeholder="请输入您的真实姓名">
+                    <img src="../../public/images/newcars/close.png" class="img-reset">
+                    <a href="javascript:;" class="input-reset"></a>
+                </div>
+            </div>
+            <div class="form-group user-phone">
+                <label class="control-label">联系方式</label>
+                <div class="control-input">
+                    <input type="number" class="form-control" id="contact-phone" placeholder="请输入您的手机号码">
+                    <img src="../../public/images/newcars/close.png" class="img-reset">
+                    <a href="javascript:;" class="input-reset"></a>
+                </div>
+            </div>
+            <div class="form-group user-code">
+                <label class="control-label">验证码</label>
+                <div class="control-input2">
+                    <input type="number" class="form-control" id="phone-code" placeholder="请输入验证码">
+                </div>
+                <div class="control-button">
+                    <input id="send-code" class="send-code" type="button" value="获取验证码">
+                </div>
+            </div>
+        </div>
+        <div class="choose-distributor">
+            <div class="inquiry-title">
+                <span>选择询问经销商（可多选）</span>
+                <span class="city-location"><i class="iconfont icon-location"></i><a href="bmy://app.page/city/select"><em>上海市</em></a></span>
+            </div>
+            <ul class="inquiry-distributor-list"></ul>
+        </div>
+    </div>
+    <div class="comment-block clearfix">
+        <div class="user-btn">
+            <div class="add-garage">
+                <i class="iconfont icon-unfavorite"></i>加入车库
+            </div>
+            <div class="free-inquiry">
+                <div class="free-btn">免费试驾</div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-block" style="display: none;">
+        <div class="free-btn btn-org active">免费试驾</div>
+    </div>
+    <div class="share-bar">
+        <img src="../../public/images/public/down_logo.png" class="share-logo">
+        <div class="share-word">
+            <h3>保满意APP</h3>
+            <p>买车险就用保满意</p>
+        </div>
+        <div class="share-control">
+            <a href="javascript:;" class="rightnow-open">立即打开</a>
+            <img src="../../public/images/public/close.png" class="share-close"> 
+        </div>
+    </div>
+    <div class="layer-share">请在浏览器中打开链接下载 <img src="../../public/images/public/arrow.png" style="width:3.3rem;"></div>
+    <script type="text/javascript" src="../../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/config.js"></script>
+    <script type="text/javascript" src="../../public/dist/js/app.js"></script>
+    <script src="http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js"></script>
+    <script>
+        var fn;
+        var url = window.location.href.match(/stype=.([^&]*)/);
+        var city = remote_ip_info['city'];
+        var vtoken;
+        var carId,carToken;
+
+        if(url&&url[0].substr(6)==1){
+            var id = window.location.href.match(/id=.([^&]*)/)[0].substr(3);
+            $.post('//'+domain.jc+'/user/get_token',{guid:'imei',user_id:0}, function (re) {
+                if(re.code=='0001200'){
+                    vtoken = re.data;
+                    getUrl();
+                }
+            },'json');
+
+            function getUrl(){              
+                new Drive({
+                    id: id,
+                    type:12,
+                    limit:0,
+                    city:city,
+                    page:1,
+                    stype:1,
+                    token: vtoken
+                });
+                $(".share-bar").css("display","block").css("bottom","5rem");
+                $(".comment-block").css("display","none");
+                $(".bottom-block").css("display","block");
+                $(".city-location").css("display","none");
+                $(".rightnow-open").on("tap",function(){
+                    if(isWeiXin()){
+                        $(".layer-share").css("display","block");
+                    }else{
+                        new OpenApp({});
+                    }
+                    $(".layer-share").on("tap",function(){
+                        $(this).css("display","none");
+                    })
+                });
+            }
+
+            var userId = window.location.href.match(/userId=.([^&]*)/)[0].substr(7);
+            var code = window.location.href.match(/code=.([^&]*)/)?window.location.href.match(/code=.([^&]*)/)[0].substr(5):0;
+            
+            var arry = arry||[];
+            var flag = 0;
+
+            if(code){
+                arry = localStorage.getItem("hksj");
+                if(arry){
+                    var b = arry.split(",");
+                    for(var i=0; i<b.length; i++){
+                        flag = b[i] == id ? 1 : 0 ;
+                    }
+                }
+
+
+                if(!flag){
+                    var myoc = new ObtainClient({
+                        user_id: userId,
+                        code: code,
+                        share_title: "保满意-好车试驾",
+                        share_id: id,
+                        share_type: -1
+                    });
+                    myoc.init();
+
+                    arry = arry?arry+","+id:id;
+                    localStorage.setItem("hksj",arry)
+                }
+            }
+
+            $("body").append(CNZZ);
+        }
+
+        function accept(rs){
+            var json = $.parseJSON(rs);
+            vtoken = json.token;
+            try{
+                json.userId;
+            } catch (e){
+                json.userId = 0
+            }
+            fn = new Drive({
+                id: json.styleId,
+                city:json.city,
+                type:2,
+                limit:0,
+                page:1,
+                token: json.token,
+                user_id:json.userId,
+                mobile:json.mobile,
+                name:json.name
+            });
+            carId = json.styleId;
+            carToken = json.token;
+        }
+        function acceptShare(){
+            fn.sharepage();
+        }
+
+        function acceptCity(city){
+            $(".city-location em").html(city);
+            $(".inquiry-distributor-list").html(" ");
+            new Drive({
+                id: carId,
+                city: city,
+                token: carToken
+            });
+        }
+        
+        $(function(){
+            $("#send-code").off("tap").on("tap",function(){
+                if($(this).attr("disabled")=="disabled"){
+                    return;
+                };
+                $(this).attr("disabled","disabled");
+                new sendMessage({
+                    mobliephone:$("#contact-phone"),
+                    type:"order",
+                    token: vtoken
+                })
+            });
+        })
+    </script>
+</body>
+</html>

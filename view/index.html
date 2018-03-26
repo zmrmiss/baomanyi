@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset='utf-8'>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>---查询页---</title>
+</head>
+<body>
+    <style>
+        *{font-size: 20px; font-family: "微软雅黑"; box-sizing: border-box; padding: 0; margin: 0;}
+        ul{ margin-bottom: 40px; }
+        li{ margin-bottom: 8px; list-style-type: none; color: #123489;}
+        a{display: block; color: #fff; text-decoration: none;}
+        h2{ color: #fff; background: #08C770; margin-left: -20px; padding-left: 10px; line-height: 30px; }
+        body{ background: #4FC7F8;}
+        .clearfix:after { content: " "; display: block; clear: both; }
+        .main{ position: absolute; width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0; }
+        .left{ position: fixed; left: 0; top: 0; bottom: 0; width: 190px; float: left; background: #123984; padding-top: 50px; }
+        .right{ width: 100%; height: 100%; padding-top: 100px; padding-left: 250px; float: left; }
+        .menu-list{ color: #D9E5FC; line-height: 40px; }
+        .menu-list li{ text-align: center; cursor: pointer; color: #D9E5FC; }
+        .menu-list li:hover{ background-color: #062A67; }
+        .menu-list li.on{background-color: #062A67;}
+        .right>ul{display: none;}
+        .right li{ padding-left: 35px;}
+        ul.visible{ display: block; }
+        .new{ background: url(../public/images/new.png) no-repeat 10px 3px; }
+    </style>
+    <div class="main clearfix">
+        <div class="left">
+            <ul class="menu-list">
+                <li data-id="19" class="on">流量充值</li>
+                <li data-id="18">会员福利/积分商城</li>
+                <li data-id="17">需求对接/招聘</li>
+                <li data-id="16">HR端页面</li>
+                <li data-id="15">微站</li>
+                <li data-id="14">大都会产品</li>
+                <li data-id="13">阳光产品</li>
+                <li data-id="12">昆仑产品</li>
+                <li data-id="11">咨询类产品</li>
+                <li data-id="10">支付</li>
+                <li data-id="9">经纪人</li>
+                <li data-id="8">新车</li>
+                <li data-id="7">问答</li>
+                <li data-id="6">广场</li>
+                <li data-id="5">H5用户</li>
+                <li data-id="4">邀请好友</li>
+                <li data-id="3">基础页</li>
+                <li data-id="2">其它</li>
+                <li data-id="1">历史</li>
+            </ul>
+        </div>
+        <div class="right">
+            <ul data-id="19" class="visible">
+                <li>充值首页：<a href="http://172.13.18.200/view/flow/flow_detail.html" target="_blank">http://172.13.18.200/view/flow/flow_detail.html</a></li>
+                <li>确认支付页：<a href="http://172.13.18.200/view/flow/flow_insure.html" target="_blank">http://172.13.18.200/view/flow/flow_insure.html</a></li>
+                <li>流量账单页：<a href="http://172.13.18.200/view/flow/flow_bill.html" target="_blank">http://172.13.18.200/view/flow/flow_bill.html</a></li>
+                <li>账单详情页：<a href="http://172.13.18.200/view/flow/flow_bidet.html" target="_blank">http://172.13.18.200/view/flow/flow_bidet.html</a></li>
+                <li>流量充值支付页：<a href="http://172.13.18.200/view/flow/flow-jump.html" target="_blank">http://172.13.18.200/view/flow/flow-jump.html</a></li>
+
+            </ul>
+            <ul data-id="18">
+                <li>会员福利详情页：<a href="http://172.13.18.200/view/product_life/member/mem_insure.html" target="_blank">http://172.13.18.200/view/product_life/member/mem_insure.html</a></li>
+                <li>我的会员福利页：<a href="http://172.13.18.200/view/product_life/member/mine_insure.html" target="_blank">http://172.13.18.200/view/product_life/member/mine_insure.html</a></li>
+                <li>会员福利常见问题页：<a href="http://172.13.18.200/view/product_life/member/mem_help.html" target="_blank">http://172.13.18.200/view/product_life/member/mem_help.html</a></li>
+                <li>积分商品详情页：<a href="http://172.13.18.200/view/integral/jf_detail.html" target="_blank">http://172.13.18.200/view/integral/jf_detail.html</a></li>
+            </ul>
+            <ul data-id="17">
+                <li>需求对接详情页：<a href="http://172.13.18.200/view/demand/demand.html" target="_blank">http://172.13.18.200/view/demand/demand.html</a></li>
+                <li>需求支付页：<a href="http://172.13.18.200/view/demand/dema-jump.html" target="_blank">http://172.13.18.200/view/demand/dema-jump.html</a></li>
+                <li>短信充值支付页：<a href="http://172.13.18.200/view/demand/message-jump.html" target="_blank">http://172.13.18.200/view/demand/message-jump.html</a></li>
+                <li>招聘职位详情页：<a href="http://172.13.18.200/view/recruit/rec_detail.html" target="_blank">http://172.13.18.200/view/recruit/rec_detail.html</a></li>
+                <li>招聘公司介绍页：<a href="http://172.13.18.200/view/recruit/rec_insure.html" target="_blank">http://172.13.18.200/view/recruit/rec_insure.html</a></li>
+            </ul>
+            <ul data-id="16">
+                <li>登录页：<a href="http://172.13.18.200/hrZP/pages/index.html" target="_blank">http://172.13.18.200/hrZP/pages/index.html</a></li>
+                <li>注册页：<a href="http://172.13.18.200/hrZP/pages/register.html" target="_blank">http://172.13.18.200/hrZP/pages/register.html</a></li>
+                <li>找回密码页：<a href="http://172.13.18.200/hrZP/pages/retrieve.html" target="_blank">http://172.13.18.200/hrZP/pages/retrieve.html</a></li>
+                <li>发布职位页：<a href="http://172.13.18.200/hrZP/pages/annou.html" target="_blank">http://172.13.18.200/hrZP/pages/annou.html</a></li>
+                <li>企业信息审核页：<a href="http://172.13.18.200/hrZP/pages/audit.html" target="_blank">http://172.13.18.200/hrZP/pages/audit.html</a></li>
+                <li>企业选择页：<a href="http://172.13.18.200/hrZP/pages/enter.html" target="_blank">http://172.13.18.200/hrZP/pages/enter.html</a></li>
+                <li>hr管理页：<a href="http://172.13.18.200/hrZP/pages/public.html" target="_blank">http://172.13.18.200/hrZP/pages/public.html</a></li>
+                <li>申请驳回页：<a href="http://172.13.18.200/hrZP/pages/result.html" target="_blank">http://172.13.18.200/hrZP/pages/result.html</a></li>
+                <li>审核中页：<a href="http://172.13.18.200/hrZP/pages/review.html" target="_blank">http://172.13.18.200/hrZP/pages/review.html</a></li>
+
+            </ul>
+            <ul data-id="15">
+                <li>买保险：<a href="http://172.13.18.200/view/buy_insurance/index.html" target="_blank">http://172.13.18.200/view/buy_insurance/index.html</a></li>
+                <li>我的订单：<a href="http://172.13.18.200/view/myorder/index.html" target="_blank">http://172.13.18.200/view/myorder/index.html</a></li>
+                <li>寿险订单详情：<a href="http://172.13.18.200/view/myorder/info_life.html" target="_blank">http://172.13.18.200/view/myorder/info_life.html</a></li>
+                <li>车险订单详情：<a href="http://172.13.18.200/view/myorder/info_car.html" target="_blank">http://172.13.18.200/view/myorder/info_car.html</a></li>
+                <li>邀请好友：<a href="http://172.13.18.200/view/share/invite.html" target="_blank">http://172.13.18.200/view/share/invite.html</a></li>
+                <li>奖励说明：<a href="http://172.13.18.200/view/share/explain.html" target="_blank">http://172.13.18.200/view/share/explain.html</a></li>
+                <li>邀请注册：<a href="http://172.13.18.200/view/share/reg.html" target="_blank">http://172.13.18.200/view/share/reg.html</a></li>
+                <li>车险比价：<a href="http://172.13.18.200/view/product_car/v_compare.html" target="_blank">http://172.13.18.200/view/product_car/v_compare.html</a></li>
+                <li>车险分享页：<a href="http://172.13.18.200/view/product_car/offer_share.html" target="_blank">http://172.13.18.200/view/product_car/offer_share.html</a></li>
+            </ul>
+            <ul data-id="14">
+                <li>自驾车意外险(详情页)：<a href="http://172.13.18.200/view/product_life/ddhsx/ddh_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ddhsx/ddh_detail.html?inject=all</a></li>
+                <li>自驾车意外险(投保页)：<a href="http://172.13.18.200/view/product_life/ddhsx/ddh_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ddhsx/ddh_insure.html?inject=all</a></li>
+                <li>自驾车意外险(投保确认页)：<a href="http://172.13.18.200/view/product_life/ddhsx/ddh_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ddhsx/ddh_confirm.html?inject=all</a></li>
+                <li>航空意外险(详情页)：<a href="http://172.13.18.200/view/product_life/ddhsx/ddh_aviation_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ddhsx/ddh_aviation_detail.html?inject=all</a></li>
+                <li>航空意外险(投保页)：<a href="http://172.13.18.200/view/product_life/ddhsx/ddh_aviation_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ddhsx/ddh_aviation_insure.html?inject=all</a></li>
+                <li>航空意外险(投保确认页)：<a href="http://172.13.18.200/view/product_life/ddhsx/ddh_aviation_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ddhsx/ddh_aviation_confirm.html?inject=all</a></li>
+            </ul>
+            <ul data-id="13">
+                <li>健康随e保：<a href="http://172.13.18.200/view/product_life/ygsx/ygjk_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygjk_detail.html?inject=all</a></li>
+                <li>健康随e保保障方案：<a href="http://172.13.18.200/view/product_life/ygsx/ygjk_concept.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygjk_concept.html?inject=all</a></li>
+                <li>健康随e保投保页：<a href="http://172.13.18.200/view/product_life/ygsx/ygjk_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygjk_insure.html?inject=all</a></li>
+                <li>健康随e保确认投保页：<a href="http://172.13.18.200/view/product_life/ygsx/ygjk_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygjk_confirm.html?inject=all</a></li>
+                <li class="new">人生随e保：<a href="http://172.13.18.200/view/product_life/ygsx/ygrs_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygrs_detail.html?inject=all</a></li>
+                <li class="new">人生随e保保障方案：<a href="http://172.13.18.200/view/product_life/ygsx/ygrs_concept.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygrs_concept.html?inject=all</a></li>
+                <li class="new">人生随e保投保页：<a href="http://172.13.18.200/view/product_life/ygsx/ygrs_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygrs_insure.html?inject=all</a></li>
+                <li class="new">人生随e保申请邮箱审核：<a href="http://172.13.18.200/view/product_life/ygsx/ygrs_email.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygjk_email.html?inject=all</a></li>
+                <li class="new">人生随e保确认投保页：<a href="http://172.13.18.200/view/product_life/ygsx/ygrs_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/ygjk_confirm.html?inject=all</a></li>
+                <li class="new">健康告知（两个产品一样）：<a href="http://172.13.18.200/view/product_life/ygsx/yg_notice.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/ygsx/yg_notice.html?inject=all</a></li>
+            </ul>
+            <ul data-id="12">
+                <li>吉祥年(详情页)：<a href="http://172.13.18.200/view/product_life/jxn_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jxn_detail.html?inject=all</a></li>
+                <li>吉祥年(投保页)：<a href="http://172.13.18.200/view/product_life/jxn_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jxn_insure.html?inject=all</a></li>
+                <li>吉祥年(投保确认页)：<a href="http://172.13.18.200/view/product_life/jxn_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jxn_confirm.html?inject=all</a></li>
+                <li>健康宝(详情页)：<a href="http://172.13.18.200/view/product_life/jkb_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jkb_detail.html?inject=all</a></li>
+                <li>健康宝(投保页)：<a href="http://172.13.18.200/view/product_life/jkb_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jkb_insure.html?inject=all</a></li>
+                <li>健康宝(投保确认页)：<a href="http://172.13.18.200/view/product_life/jkb_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jkb_confirm.html?inject=all</a></li>
+            </ul>
+            <ul data-id="11">
+                <li>资讯类产品(详情页 可分享)：<a href="http://172.13.18.200/view/product_life/common_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/common_detail.html?inject=all</a></li>
+                <li>投保咨询页(咨询类产品和战略合作的下一步 不可分享)：<a href="http://172.13.18.200/view/product_life/common_consult.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/common_consult.html?inject=all</a></li>
+            </ul>
+            <ul data-id="10">
+                <li>支付宝支付：<a href="http://172.13.18.200/view/pay/index.html?inject=all" target="_blank">http://172.13.18.200/view/pay/index.html?inject=all</a></li>
+                <li>阳光保险银行支付：<a href="http://172.13.18.200/view/pay/bank.html?inject=all" target="_blank">http://172.13.18.200/view/pay/bank.html?inject=all</a></li>
+                <li>投保成功：<a href="http://172.13.18.200/view/pay/success.html?inject=all" target="_blank">http://172.13.18.200/view/pay/success.html?inject=all</a></li>
+                <li>在微信中提示支付：<a href="http://172.13.18.200/view/pay/payinwechat.html?inject=all" target="_blank">http://172.13.18.200/view/pay/payinwechat.html?inject=all</a></li>
+            </ul>
+            <ul data-id="9">
+                <li>寿险经纪人详情(内容有增加)(可分享)：<a href="http://172.13.18.200/view/jichu/manager_life.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/manager_life.html?inject=all</a></li>
+                <li>车险经纪人详情(内容有增加)(可分享)：<a href="http://172.13.18.200/view/jichu/manager_car.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/manager_car.html?inject=all</a></li>
+                <li>经纪人动态列表(可分享)：<a href="http://172.13.18.200/view/jichu/dynamic.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/dynamic.html?inject=all</a></li>
+                <li>经纪人荣誉列表(可分享)：<a href="http://172.13.18.200/view/jichu/honour.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/honour.html?inject=all</a></li>
+                <li>经纪人荣誉详情(可分享)：<a href="http://172.13.18.200/view/jichu/honour_page.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/honour_page.html?inject=all</a></li>
+            </ul>
+            <ul data-id="8">
+                <li>免费试驾页(我的比价入口)(不可分享)：<a href="http://172.13.18.200/view/newcars/drive_show.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/drive_show.html?inject=all</a></li>
+                <li>免费询价页(我的比价入口)(不可分享)：<a href="http://172.13.18.200/view/newcars/inquiry_show.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/inquiry_show.html?inject=all</a></li>
+                <li>询价和试驾未认证经销商详情(我的比价入口)(不可分享)：<a href="http://172.13.18.200/view/newcars/distributor_show.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/distributor_show.html?inject=all</a></li>
+                <li>接待规则说明()：<a href="http://172.13.18.200/view/newcars/rules.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/rules.html?inject=all</a></li>
+                <li>经销商详情页()：<a href="http://172.13.18.200/view/newcars/distributor.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/distributor.html?inject=all</a></li>
+                <li>免费试驾页(可分享)：<a href="http://172.13.18.200/view/newcars/drive.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/drive.html?inject=all</a></li>
+                <li>免费询价页(可分享)：<a href="http://172.13.18.200/view/newcars/inquiry.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/inquiry.html?inject=all</a></li>
+            </ul>
+            <ul data-id="7">
+                <li>问答详情(增加答案盖楼)：<a href="http://172.13.18.200/view/wenda/index.html?inject=all" target="_blank">http://172.13.18.200/view/wenda/index.html?inject=all</a></li>
+            </ul>
+            <ul data-id="6">
+                <li>广场资讯/培训(增加评论功能)：<a href="http://172.13.18.200/view/guangchang/index.html?inject=all" target="_blank">http://172.13.18.200/view/guangchang/index.html?inject=all</a></li>
+            </ul>
+            <ul data-id="5">
+                <li>H5登录(不需要加入app)：<a href="http://172.13.18.200/view/user/login.html">http://172.13.18.200/view/user/login.html</a></li>
+                <li>H5注册(不需要加入app)：<a href="http://172.13.18.200/view/user/reg.html" target="_blank">http://172.13.18.200/view/user/reg.html</a></li>
+                <li>H5重置密码(不需要加入app)：<a href="http://172.13.18.200/view/user/reset.html" target="_blank">http://172.13.18.200/view/user/reset.html</a></li>
+            </ul>
+            <ul data-id="4">
+                <li>邀请好友规则：<a href="http://172.13.18.200/view/share/rule.html" target="_blank">http://172.13.18.200/view/share/rule.html</a></li>
+                <li>分享注册()：<a href="http://172.13.18.200/view/share/index.html?inject=all" target="_blank">http://172.13.18.200/view/share/index.html</a></li>
+                <li>分享注册成功()：<a href="http://172.13.18.200/view/share/success.html?inject=all" target="_blank">http://172.13.18.200/view/share/success.html?inject=all</a></li>
+            </ul>
+            <ul data-id="3">
+                <li>常见问题()：<a href="http://172.13.18.200/view/jichu/faq.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/faq.html?inject=all</a></li>
+                <li>满意币常见问题()：<a href="http://172.13.18.200/view/jichu/faq_myb.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/faq_myb.html?inject=all</a></li>
+                <li>关于我们()：<a href="http://172.13.18.200/view/jichu/about.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/about.html?inject=all</a></li>
+                <li>用户协议：<a href="http://172.13.18.200/view/jichu/policy.html" target="_blank">http://172.13.18.200/view/jichu/policy.html</a></li>
+                <li>积分规则：<a href="http://172.13.18.200/view/jichu/rule.html" target="_blank">http://172.13.18.200/view/jichu/rule.html</a></li>
+                <li>经纪人常见问题()：<a href="http://172.13.18.200/view/jichu/rule.html" target="_blank">http://172.13.18.200/view/myClient/problem.html</a></li>
+                <li>经纪人注册客户常见问题()：<a href="http://172.13.18.200/view/jichu/rule.html" target="_blank">http://172.13.18.200/view/jichu/jjr_register.html</a></li>
+            </ul>
+            <ul data-id="2">
+                <li>吉祥年综合意外伤害：<a href="http://172.13.18.200/view/news/info_2.html" target="_blank">http://172.13.18.200/view/news/info_2.html</a></li>
+                <li>健康宝肝疾病：<a href="http://172.13.18.200/view/news/info_1.html" target="_blank">http://172.13.18.200/view/news/info_1.html</a></li>
+                <li>新车(comingsoon)：<a href="http://172.13.18.200/view/coming/new_car.html?inject=all" target="_blank">http://172.13.18.200/view/coming/new_car.html?inject=all</a></li>
+                <li>展业(comingsoon)：<a href="http://172.13.18.200/view/coming/business.html?inject=all" target="_blank">http://172.13.18.200/view/coming/business.html?inject=all</a></li>
+                <li>车险购买步骤：<a href="http://172.13.18.200/view/myClient/cx_step.html" target="_blank">http://172.13.18.200/view/myClient/cx_step.html</a></li>
+                <li>产品对比结果(被弃用)<a href="http://172.13.18.200/view/compare/pro_result.html?inject=all" target="_blank">http://172.13.18.200/view/compare/pro_result.html?inject=all</a></li>
+                <li>产品对比(被弃用)：<a href="http://172.13.18.200/view/compare/pro_compare.html?inject=all" target="_blank">http://172.13.18.200/view/compare/pro_compare.html?inject=all</a></li>
+                <li>产品详情(被弃用)：<a href="http://172.13.18.200/view/compare/pro_detail.html?inject=all" target="_blank">http://172.13.18.200/view/compare/pro_detail.html?inject=all</a></li>
+            </ul>
+            <ul data-id="1">
+                <ul>
+                    <h2>保满意 V1.2.0：</h2>
+                    <li>吉祥年(详情页)：<a href="http://172.13.18.200/view/product_life/jxn_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jxn_detail.html?inject=all</a></li>
+                    <li>吉祥年(投保页)：<a href="http://172.13.18.200/view/product_life/jxn_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jxn_insure.html?inject=all</a></li>
+                    <li>吉祥年(投保确认页)：<a href="http://172.13.18.200/view/product_life/jxn_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jxn_confirm.html?inject=all</a></li>
+                    <li>健康宝(详情页)：<a href="http://172.13.18.200/view/product_life/jkb_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jkb_detail.html?inject=all</a></li>
+                    <li>健康宝(投保页)：<a href="http://172.13.18.200/view/product_life/jkb_insure.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jkb_insure.html?inject=all</a></li>
+                    <li>健康宝(投保确认页)：<a href="http://172.13.18.200/view/product_life/jkb_confirm.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/jkb_confirm.html?inject=all</a></li>
+                    <li>支付方式：<a href="http://172.13.18.200/view/pay/index.html?inject=all" target="_blank">http://172.13.18.200/view/pay/index.html?inject=all</a></li>
+                    <li>投保成功：<a href="http://172.13.18.200/view/pay/success.html?inject=all" target="_blank">http://172.13.18.200/view/pay/success.html?inject=all</a></li>
+                    <li>资讯类产品(详情页 可分享)：<a href="http://172.13.18.200/view/product_life/common_detail.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/common_detail.html?inject=all</a></li>
+                    <li>投保咨询页(咨询类产品和战略合作的下一步 不可分享)：<a href="http://172.13.18.200/view/product_life/common_consult.html?inject=all" target="_blank">http://172.13.18.200/view/product_life/common_consult.html?inject=all</a></li>
+                    <li>寿险经纪人详情(内容有增加)(可分享)：<a href="http://172.13.18.200/view/jichu/manager_life.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/manager_life.html?inject=all</a></li>
+                    <li>车险经纪人详情(内容有增加)(可分享)：<a href="http://172.13.18.200/view/jichu/manager_car.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/manager_car.html?inject=all</a></li>
+                    <li>经纪人动态列表(可分享)：<a href="http://172.13.18.200/view/jichu/dynamic.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/dynamic.html?inject=all</a></li>
+                    <li>经纪人荣誉列表(可分享)：<a href="http://172.13.18.200/view/jichu/honour.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/honour.html?inject=all</a></li>
+                    <li>经纪人荣誉详情(可分享)：<a href="http://172.13.18.200/view/jichu/honour_page.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/honour_page.html?inject=all</a></li>
+                    <li>广场资讯/培训(增加评论功能)：<a href="http://172.13.18.200/view/guangchang/index.html?inject=all" target="_blank">http://172.13.18.200/view/guangchang/index.html?inject=all</a></li>
+                    <li>问答详情(增加答案盖楼)：<a href="http://172.13.18.200/view/wenda/index.html?inject=all" target="_blank">http://172.13.18.200/view/wenda/index.html?inject=all</a></li>
+                    <li>H5登录(不需要加入app)：<a href="http://172.13.18.200/view/user/login.html">http://172.13.18.200/view/user/login.html</a></li>
+                    <li>H5注册(不需要加入app)：<a href="http://172.13.18.200/view/user/reg.html" target="_blank">http://172.13.18.200/view/user/reg.html</a></li>
+                    <li>H5重置密码(不需要加入app)：<a href="http://172.13.18.200/view/user/reset.html" target="_blank">http://172.13.18.200/view/user/reset.html</a></li>
+                </ul>
+                <ul>
+                    <h2>11月3号之前：</h2>
+                    <li>免费试驾页(我的比价入口)(不可分享)：<a href="http://172.13.18.200/view/newcars/drive_show.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/drive_show.html?inject=all</a></li>
+                    <li>免费询价页(我的比价入口)(不可分享)：<a href="http://172.13.18.200/view/newcars/inquiry_show.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/inquiry_show.html?inject=all</a></li>
+                    <li>询价和试驾未认证经销商详情(我的比价入口)(不可分享)：<a href="http://172.13.18.200/view/newcars/distributor_show.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/distributor_show.html?inject=all</a></li>
+                    <li>接待规则说明()：<a href="http://172.13.18.200/view/newcars/rules.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/rules.html?inject=all</a></li>
+                    <li>经销商详情页()：<a href="http://172.13.18.200/view/newcars/distributor.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/distributor.html?inject=all</a></li>
+                    <li>免费试驾页(可分享)：<a href="http://172.13.18.200/view/newcars/drive.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/drive.html?inject=all</a></li>
+                    <li>免费询价页(可分享)：<a href="http://172.13.18.200/view/newcars/inquiry.html?inject=all" target="_blank">http://172.13.18.200/view/newcars/inquiry.html?inject=all</a></li>
+                </ul>
+                <ul>
+                    <li>吉祥年综合意外伤害：<a href="http://172.13.18.200/view/news/info_2.html" target="_blank">http://172.13.18.200/view/news/info_2.html</a></li>
+                    <li>健康宝肝疾病：<a href="http://172.13.18.200/view/news/info_1.html" target="_blank">http://172.13.18.200/view/news/info_1.html</a></li>
+                </ul>
+                <ul>
+                    <h2>9月15号之前：</h2>
+                    <li>常见问题(数据接通)：<a href="http://172.13.18.200/view/jichu/faq.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/faq.html?inject=all</a></li>
+                    <li>满意币常见问题(数据接通)：<a href="http://172.13.18.200/view/jichu/faq_myb.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/faq_myb.html?inject=all</a></li>
+                    <li>关于我们(数据接通)：<a href="http://172.13.18.200/view/jichu/about.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/about.html?inject=all</a></li>
+                    <li>寿险经纪人详情(数据接通)：<a href="http://172.13.18.200/view/jichu/manager_life.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/manager_life.html?inject=all</a></li>
+                    <li>车险经纪人详情(数据接通)：<a href="http://172.13.18.200/view/jichu/manager_car.html?inject=all" target="_blank">http://172.13.18.200/view/jichu/manager_car.html?inject=all</a></li>
+                    <li>问答详情(数据接通)：<a href="http://172.13.18.200/view/wenda/index.html?inject=all" target="_blank">http://172.13.18.200/view/wenda/index.html?inject=all</a></li>
+                    <li>资讯详情(数据接通)：<a href="http://172.13.18.200/view/guangchang/index.html?inject=all" target="_blank">http://172.13.18.200/view/guangchang/index.html?inject=all</a></li>       
+                    <li>新车(无数据)：<a href="http://172.13.18.200/view/coming/new_car.html?inject=all" target="_blank">http://172.13.18.200/view/coming/new_car.html?inject=all</a></li>
+                    <li>展业(无数据)：<a href="http://172.13.18.200/view/coming/business.html?inject=all" target="_blank">http://172.13.18.200/view/coming/business.html?inject=all</a></li>
+                    <li>产品对比结果(被弃用)<a href="http://172.13.18.200/view/compare/pro_result.html?inject=all" target="_blank">http://172.13.18.200/view/compare/pro_result.html?inject=all</a></li>
+                    <li>产品对比(被弃用)：<a href="http://172.13.18.200/view/compare/pro_compare.html?inject=all" target="_blank">http://172.13.18.200/view/compare/pro_compare.html?inject=all</a></li>
+                    <li>产品详情(被弃用)：<a href="http://172.13.18.200/view/compare/pro_detail.html?inject=all" target="_blank">http://172.13.18.200/view/compare/pro_detail.html?inject=all</a></li>
+                    <li>用户协议：<a href="http://172.13.18.200/view/jichu/policy.html" target="_blank">http://172.13.18.200/view/jichu/policy.html</a></li>
+                    <li>积分规则：<a href="http://172.13.18.200/view/jichu/rule.html" target="_blank">http://172.13.18.200/view/jichu/rule.html</a></li>
+                    <li>邀请好友规则：<a href="http://172.13.18.200/view/share/rule.html" target="_blank">http://172.13.18.200/view/share/rule.html</a></li>
+                    <li>分享注册()：<a href="http://172.13.18.200/view/share/index.html?inject=all" target="_blank">http://172.13.18.200/view/share/index.html</a></li>
+                    <li>分享注册成功()：<a href="http://172.13.18.200/view/share/success.html?inject=all" target="_blank">http://172.13.18.200/view/share/success.html?inject=all</a></li>
+                </ul>
+            </ul>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="../public/dist/js/script/Zepto.js"></script>
+    <script type="text/javascript" src="../public/dist/js/app.js"></script>
+    <script>
+        $(function () {
+            $(".menu-list li").on("click",function(){
+                var id = $(this).data("id");
+                $(".menu-list li").removeClass("on");
+                $(this).addClass("on");
+                $(".right>ul").css("display","none");
+                $(".right ul[data-id='"+id+"']").css("display","block");
+
+            })
+        })
+    </script>
+</body>
+</html>
